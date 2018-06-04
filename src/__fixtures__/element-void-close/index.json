@@ -1,0 +1,37 @@
+{
+  "type": "element",
+  "tagName": "body",
+  "properties": {},
+  "children": [
+    {
+      "type": "element",
+      "tagName": "br",
+      "properties": {},
+      "children": []
+    },
+    {
+      "type": "text",
+      "value": "text"
+    },
+    {
+      "type": "element",
+      "tagName": "br",
+      "properties": {},
+      "children": []
+    },
+    {
+      "type": "text",
+      "value": "\n"
+    },
+    {
+      "type": "element",
+      "tagName": "img",
+      "properties": {},
+      "children": []
+    },
+    {
+      "type": "text",
+      "value": "text\n"
+    }
+  ]
+}
