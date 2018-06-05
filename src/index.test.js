@@ -55,7 +55,12 @@ describe('hast-util-to-dom', () => {
       }],
     };
     const htmlActual = serializeNodeToHtmlString(toDOM(tree));
-    const htmlExpected = '<!DOCTYPE html><html><head></head><body></body></html>';
+    let htmlExpected = '<!DOCTYPE html><html><head></head><body></body></html>';
+    if (!bowser.x) {
+      if (bowser.gecko) {
+        htmlExpected = '<!DOCTYPE html>\n<html><head></head><body></body></html>';
+      }
+    }
     expect(htmlActual).toEqual(htmlExpected);
   });
 
@@ -103,6 +108,26 @@ describe('hast-util-to-dom', () => {
         htmlExpected = '<input disabled="" value="foo" />';
       } else if (bowser.gecko) {
         htmlExpected = '<input disabled="disabled" value="foo" />';
+      }
+    }
+    expect(htmlActual).toEqual(htmlExpected);
+  });
+
+  it('handles space-separated attributes correctly', () => {
+    const tree = h('div', { class: ['foo', 'bar'] });
+    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+    const htmlExpected = '<div class="foo bar"></div>';
+    expect(htmlActual).toEqual(htmlExpected);
+  });
+
+  it('handles comma-separated attributes correctly', () => {
+    const img = 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=';
+    const tree = h('img', { srcSet: [`${img} 1x`, `${img} 2x`] });
+    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+    let htmlExpected = `<img srcset="${img} 1x, ${img} 2x">`;
+    if (!bowser.x) {
+      if (bowser.webkit || bowser.blink || bowser.gecko) {
+        htmlExpected = `<img srcset="${img} 1x, ${img} 2x" />`;
       }
     }
     expect(htmlActual).toEqual(htmlExpected);

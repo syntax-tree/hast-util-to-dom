@@ -1,6 +1,6 @@
 {
   "name": "hast-util-to-dom",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Transform HAST to DOM",
   "main": "dist/hast-util-to-dom.js",
   "module": "dist/hast-util-to-dom.mjs",

@@ -124,6 +124,7 @@ function element(node, options = {}) {
       name: key,
       propertyName: key,
     };
+
     const {
       name,
       propertyName,
@@ -133,10 +134,21 @@ function element(node, options = {}) {
       overloadedBoolean,
       // numeric,
       // positiveNumeric,
-      // commaSeparated,
-      // spaceSeparated,
+      commaSeparated,
+      spaceSeparated,
     } = info;
-    const value = properties[key];
+
+    let value = properties[key];
+    if (Array.isArray(value)) {
+      if (commaSeparated) {
+        value = value.join(', ');
+      } else if (spaceSeparated) {
+        value = value.join(' ');
+      } else {
+        value = value.join(' ');
+      }
+    }
+
     try {
       if (mustUseProperty) {
         el[propertyName] = value;
