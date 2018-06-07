@@ -14,7 +14,7 @@ module.exports = function karmaConfig(config) {
     },
     rollupPreprocessor: {
       output: {
-        name: 'Spangle',
+        name: 'Test',
         format: 'iife',
         sourcemap: 'inline',
       },
@@ -36,6 +36,7 @@ module.exports = function karmaConfig(config) {
       'ChromeHeadless',
       'Firefox',
       'FirefoxHeadless',
+      'Safari',
     ],
     autoWatch: false,
     // singleRun: false, // Karma captures browsers, runs the tests and exits

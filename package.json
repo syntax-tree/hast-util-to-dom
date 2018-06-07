@@ -8,6 +8,7 @@
   "author": "Keith McKnight <keith@mcknig.ht> (https://keith.mcknig.ht)",
   "license": "ISC",
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "rollup -c",
     "lint": "eslint .",
     "test": "jest",
