@@ -1,4 +1,4 @@
-import information from 'property-information';
+import info from 'property-information';
 
 const ROOT_NODE = 'root';
 const TEXT_NODE = 'text';
@@ -120,23 +120,23 @@ function element(node, options = {}) {
   const { length } = props;
   for (let i = 0; i < length; i += 1) {
     const key = props[i];
-    const info = information(key) || {
-      name: key,
-      propertyName: key,
-    };
-
     const {
-      name,
-      propertyName,
+      attribute,
+      property,
       mustUseAttribute,
       mustUseProperty,
       boolean,
+      booleanish,
       overloadedBoolean,
-      // numeric,
-      // positiveNumeric,
+      // number,
+      // defined,
       commaSeparated,
       spaceSeparated,
-    } = info;
+      // commaOrSpaceSeparated,
+    } = info.find(info.html, key) || {
+      attribute: key,
+      property: key,
+    };
 
     let value = properties[key];
     if (Array.isArray(value)) {
@@ -151,20 +151,24 @@ function element(node, options = {}) {
 
     try {
       if (mustUseProperty) {
-        el[propertyName] = value;
+        el[property] = value;
       }
       if (boolean || (overloadedBoolean && typeof value === 'boolean')) {
         if (value) {
-          el.setAttribute(name, '');
+          el.setAttribute(attribute, '');
         } else {
-          el.removeAttribute(name);
+          el.removeAttribute(attribute);
         }
-      } else {
-        el.setAttribute(name, value);
+      } else if (booleanish) {
+        el.setAttribute(attribute, value);
+      } else if (value === true) {
+        el.setAttribute(attribute, '');
+      } else if (value || value === 0 || value === '') {
+        el.setAttribute(attribute, value);
       }
     } catch (e) {
-      if (!mustUseAttribute && propertyName) {
-        el[propertyName] = value;
+      if (!mustUseAttribute && property) {
+        el[property] = value;
       }
       // Otherwise silently ignore
     }

@@ -220,4 +220,78 @@ describe('hast-util-to-dom', () => {
     const htmlExpected = '<title>Hi</title><h2>Hello world!</h2>';
     expect(htmlActual).toEqual(htmlExpected);
   });
+
+  describe('booleanish property', () => {
+    it('handles booleanish attribute with `true` value correctly', () => {
+      const tree = h('div', { ariaChecked: true });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div aria-checked="true"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('handles booleanish attribute with `false` value correctly', () => {
+      const tree = h('div', { ariaChecked: false });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div aria-checked="false"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('handles booleanish attribute with value correctly', () => {
+      const tree = h('div', { ariaChecked: 'mixed' });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div aria-checked="mixed"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+  });
+
+  describe('data properties', () => {
+    it('ignores value when property is `false`', () => {
+      const tree = h('div', { dataTest: false });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('ignores value when property is `NaN`', () => {
+      const tree = h('div', { dataTest: NaN });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('encodes value as string when property is a number', () => {
+      const tree = h('div', { dataTest: 0 });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div data-test="0"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('encodes without value when property is `true`', () => {
+      const tree = h('div', { dataTest: true });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div data-test=""></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('encodes an empty value when property is an empty string', () => {
+      const tree = h('div', { dataTest: '' });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div data-test=""></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('encodes a string value as-is', () => {
+      const tree = h('div', { dataTest: 'data-test' });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div data-test="data-test"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+
+    it('encodes a string value as-is', () => {
+      const tree = h('div', { data123: 'dataTest' });
+      const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+      const htmlExpected = '<div data-123="dataTest"></div>';
+      expect(htmlActual).toEqual(htmlExpected);
+    });
+  });
 });

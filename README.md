@@ -69,9 +69,9 @@ Transform a [HAST Node][node] to DOM `Node`.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/kmck/hast-util-to-dom.svg
+[travis-badge]: https://img.shields.io/travis/syntax-tree/hast-util-to-dom.svg
 
-[travis]: https://travis-ci.org/kmck/hast-util-to-dom
+[travis]: https://travis-ci.org/syntax-tree/hast-util-to-dom
 
 [yarn]: https://yarnpkg.com/lang/en/docs/install
 
