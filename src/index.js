@@ -1,4 +1,6 @@
-import information from 'property-information';
+import propertyInformation from 'property-information';
+
+const information = propertyInformation.find.bind(null, propertyInformation.html);
 
 const ROOT_NODE = 'root';
 const TEXT_NODE = 'text';
@@ -121,13 +123,14 @@ function element(node, options = {}) {
   for (let i = 0; i < length; i += 1) {
     const key = props[i];
     const info = information(key) || {
-      name: key,
-      propertyName: key,
+      attribute: key,
+      property: key,
     };
 
+    const name = info.attribute;
+    const propertyName = info.property;
+
     const {
-      name,
-      propertyName,
       mustUseAttribute,
       mustUseProperty,
       boolean,

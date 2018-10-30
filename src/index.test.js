@@ -133,6 +133,13 @@ describe('hast-util-to-dom', () => {
     expect(htmlActual).toEqual(htmlExpected);
   });
 
+  it('handles camel case attributes correctly', () => {
+    const tree = h('div', { 'data-test': 'Test' });
+    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
+    const htmlExpected = '<div data-test="Test"></div>';
+    expect(htmlActual).toEqual(htmlExpected);
+  });
+
   it('creates a doctype node', () => {
     const tree = {
       type: 'doctype',
