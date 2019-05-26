@@ -1,6 +1,7 @@
+import ns from 'web-namespaces';
 import info from 'property-information';
 
-function transform(node, options = {}) {
+function transform(node, options) {
   switch (node.type) {
     case 'root':
       return root(node, options);
@@ -18,7 +19,7 @@ function transform(node, options = {}) {
 }
 
 // Create a document.
-function root(node, options = {}) {
+function root(node, options) {
   const { fragment, namespace: optionsNamespace } = options;
   const { children = [] } = node;
   const { length: childrenLength } = children;
@@ -27,7 +28,7 @@ function root(node, options = {}) {
   let rootIsDocument = childrenLength === 0;
 
   for (let i = 0; i < childrenLength; i += 1) {
-    const { tagName, properties: { xmlns } = {} } = children[i];
+    const { tagName, properties = {} } = children[i];
 
     if (tagName === 'html') {
       // If we have a root HTML node, we don’t need to render as a fragment.
@@ -35,11 +36,7 @@ function root(node, options = {}) {
 
       // Take namespace of the first child.
       if (typeof optionsNamespace === 'undefined') {
-        if (xmlns) {
-          namespace = xmlns;
-        } else if (children[0].tagName === 'html') {
-          namespace = 'http://www.w3.org/1999/xhtml';
-        }
+        namespace = properties.xmlns || ns.html;
       }
     }
   }
@@ -55,18 +52,7 @@ function root(node, options = {}) {
     el = document.createElement('html');
   }
 
-  // Transform children.
-  const childOptions = Object.assign({ fragment, namespace }, options);
-
-  for (let i = 0; i < childrenLength; i += 1) {
-    const childEl = transform(children[i], childOptions);
-
-    if (childEl) {
-      el.appendChild(childEl);
-    }
-  }
-
-  return el;
+  return appendAll(el, children, Object.assign({ fragment, namespace }, options));
 }
 
 // Create a `doctype`.
@@ -89,9 +75,10 @@ function comment(node) {
 }
 
 // Create an `element`.
-function element(node, options = {}) {
+function element(node, options) {
   const { namespace } = options;
-  const { tagName, properties, children = [] } = node;
+  // TODO: use `g` in SVG space.
+  const { tagName = 'div', properties = {}, children = [] } = node;
   const el = typeof namespace !== 'undefined'
     ? document.createElementNS(namespace, tagName)
     : document.createElement(tagName);
@@ -106,7 +93,7 @@ function element(node, options = {}) {
     const {
       attribute,
       property,
-      mustUseAttribute,
+      // `mustUseAttribute`,
       mustUseProperty,
       boolean,
       booleanish,
@@ -116,58 +103,47 @@ function element(node, options = {}) {
       commaSeparated,
       // `spaceSeparated`,
       // `commaOrSpaceSeparated`,
-    } = info.find(info.html, key) || { attribute: key, property: key };
+    } = info.find(info.html, key);
 
     let value = properties[key];
 
     if (Array.isArray(value)) {
-      if (commaSeparated) {
-        value = value.join(', ');
-      } else {
-        value = value.join(' ');
-      }
+      value = value.join(commaSeparated ? ', ' : ' ');
     }
 
-    try {
-      if (mustUseProperty) {
-        el[property] = value;
-      }
+    if (mustUseProperty) {
+      el[property] = value;
+    }
 
-      if (boolean || (overloadedBoolean && typeof value === 'boolean')) {
-        if (value) {
-          el.setAttribute(attribute, '');
-        } else {
-          el.removeAttribute(attribute);
-        }
-      } else if (booleanish) {
-        el.setAttribute(attribute, value);
-      } else if (value === true) {
+    if (boolean || (overloadedBoolean && typeof value === 'boolean')) {
+      if (value) {
         el.setAttribute(attribute, '');
-      } else if (value || value === 0 || value === '') {
-        el.setAttribute(attribute, value);
+      } else {
+        el.removeAttribute(attribute);
       }
-    } catch (e) {
-      if (!mustUseAttribute && property) {
-        el[property] = value;
-      }
-
-      // Otherwise silently ignore.
+    } else if (booleanish) {
+      el.setAttribute(attribute, value);
+    } else if (value === true) {
+      el.setAttribute(attribute, '');
+    } else if (value || value === 0 || value === '') {
+      el.setAttribute(attribute, value);
     }
   }
 
-  // Transform children.
-  const { length: childrenLength } = children;
+  return appendAll(el, children, options);
+}
+
+// Add all children.
+function appendAll(node, children, options) {
+  const childrenLength = children.length;
 
   for (let i = 0; i < childrenLength; i += 1) {
-    const childEl = transform(children[i], options);
-
-    if (childEl) {
-      el.appendChild(childEl);
-    }
+    node.appendChild(transform(children[i], options));
   }
 
-  return el;
+  return node;
 }
+
 
 export default function toDOM(hast, options = {}) {
   return transform(hast, options);

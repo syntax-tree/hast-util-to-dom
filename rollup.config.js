@@ -16,5 +16,5 @@ export default {
       babelrc: false,
     }),
   ],
-  external: ['property-information'],
+  external: ['property-information', 'web-namespaces'],
 };
