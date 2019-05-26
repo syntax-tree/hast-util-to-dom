@@ -19,7 +19,7 @@
     "test:dev": "jest --watchAll"
   },
   "dependencies": {
-    "property-information": "^4.2.0"
+    "property-information": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
