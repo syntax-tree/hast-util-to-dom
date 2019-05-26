@@ -1,18 +1,26 @@
-# hast-util-to-dom [![Build Status][travis-badge]][travis]
+# hast-util-to-dom
 
-Transform [HAST][] to a DOM tree
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-## Installation
+[**hast**][hast] utility to transform to a DOM tree.
+
+## Install
 
 [yarn][]:
 
-```bash
+```sh
 yarn add hast-util-to-dom
 ```
 
 [npm][]:
 
-```bash
+```sh
 npm install hast-util-to-dom
 ```
 
@@ -62,9 +70,38 @@ Buddy, that’s the web!
 
 ## API
 
-### `toDOM(node)`
+### `toDOM(node[, options])`
 
-Transform a [HAST Node][node] to DOM `Node`.
+Transform a [**hast**][hast] [*tree*][tree] to a DOM tree.
+
+##### `options`
+
+###### `options.fragment`
+
+Whether a DOM fragment should be returned (default: `false`).
+
+###### `options.namespace`
+
+`namespace` to use to create [*elements*][element].
+
+## Related
+
+*   [`hast-util-sanitize`](https://github.com/syntax-tree/hast-util-sanitize)
+    — Sanitize hast nodes
+*   [`hast-util-to-html`](https://github.com/syntax-tree/hast-util-to-html)
+    — Create an HTML string
+*   [`hast-util-from-dom`](https://github.com/syntax-tree/hast-util-from-dom)
+    — Create a hast tree from a DOM tree
+
+## Contribute
+
+See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
+started.
+See [`support.md`][support] for ways to get help.
+
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -72,9 +109,31 @@ Transform a [HAST Node][node] to DOM `Node`.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/syntax-tree/hast-util-to-dom.svg
+[build-badge]: https://img.shields.io/travis/syntax-tree/hast-util-to-dom.svg
 
-[travis]: https://travis-ci.org/syntax-tree/hast-util-to-dom
+[build]: https://travis-ci.org/syntax-tree/hast-util-to-dom
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-to-dom.svg
+
+[coverage]: https://codecov.io/github/syntax-tree/hast-util-to-dom
+
+[downloads-badge]: https://img.shields.io/npm/dm/hast-util-to-dom.svg
+
+[downloads]: https://www.npmjs.com/package/hast-util-to-dom
+
+[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-to-dom.svg
+
+[size]: https://bundlephobia.com/result?p=hast-util-to-dom
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/syntax-tree
 
 [yarn]: https://yarnpkg.com/lang/en/docs/install
 
@@ -84,6 +143,14 @@ Transform a [HAST Node][node] to DOM `Node`.
 
 [author]: https://keith.mcknig.ht
 
+[contributing]: https://github.com/syntax-tree/.github/blob/master/contributing.md
+
+[support]: https://github.com/syntax-tree/.github/blob/master/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/master/code-of-conduct.md
+
 [hast]: https://github.com/syntax-tree/hast
 
-[node]: https://github.com/syntax-tree/hast#ast
+[element]: https://github.com/syntax-tree/hast#element
+
+[tree]: https://github.com/syntax-tree/unist#tree
