@@ -1,36 +1,25 @@
 import info from 'property-information';
 
-const ROOT_NODE = 'root';
-const TEXT_NODE = 'text';
-const ELEMENT_NODE = 'element';
-const DOCUMENT_TYPE_NODE = 'doctype';
-const COMMENT_NODE = 'comment';
-
 function transform(node, options = {}) {
   switch (node.type) {
-    case ROOT_NODE:
+    case 'root':
       return root(node, options);
-    case TEXT_NODE:
+    case 'text':
       return text(node, options);
-    case ELEMENT_NODE:
+    case 'element':
       return element(node, options);
-    case DOCUMENT_TYPE_NODE:
+    case 'doctype':
       return doctype(node, options);
-    case COMMENT_NODE:
+    case 'comment':
       return comment(node, options);
     default:
       return element(node, options);
   }
 }
 
-/**
- * Transform a document
- */
+// Create a document.
 function root(node, options = {}) {
-  const {
-    fragment,
-    namespace: optionsNamespace,
-  } = options;
+  const { fragment, namespace: optionsNamespace } = options;
   const { children = [] } = node;
   const { length: childrenLength } = children;
 
@@ -38,16 +27,13 @@ function root(node, options = {}) {
   let rootIsDocument = childrenLength === 0;
 
   for (let i = 0; i < childrenLength; i += 1) {
-    const {
-      tagName,
-      properties: {
-        xmlns,
-      } = {},
-    } = children[i];
+    const { tagName, properties: { xmlns } = {} } = children[i];
+
     if (tagName === 'html') {
-      // If we have a root HTML node, we don't need to render as a fragment
+      // If we have a root HTML node, we don’t need to render as a fragment.
       rootIsDocument = true;
-      // Take namespace of first child
+
+      // Take namespace of the first child.
       if (typeof optionsNamespace === 'undefined') {
         if (xmlns) {
           namespace = xmlns;
@@ -58,8 +44,9 @@ function root(node, options = {}) {
     }
   }
 
-  // The root node will be a Document, DocumentFragment, or HTMLElement
+  // The root node will be a Document, DocumentFragment, or HTMLElement.
   let el;
+
   if (rootIsDocument) {
     el = document.implementation.createDocument(namespace, '', null);
   } else if (fragment) {
@@ -68,10 +55,12 @@ function root(node, options = {}) {
     el = document.createElement('html');
   }
 
-  // Transform children
+  // Transform children.
   const childOptions = Object.assign({ fragment, namespace }, options);
+
   for (let i = 0; i < childrenLength; i += 1) {
     const childEl = transform(children[i], childOptions);
+
     if (childEl) {
       el.appendChild(childEl);
     }
@@ -80,9 +69,7 @@ function root(node, options = {}) {
   return el;
 }
 
-/**
- * Transform a DOCTYPE
- */
+// Create a `doctype`.
 function doctype(node) {
   return document.implementation.createDocumentType(
     node.name || 'html',
@@ -91,23 +78,17 @@ function doctype(node) {
   );
 }
 
-/**
- * Transform text node
- */
+// Create a `text`.
 function text(node) {
   return document.createTextNode(node.value);
 }
 
-/**
- * Transform a comment node
- */
+// Create a `comment`.
 function comment(node) {
   return document.createComment(node.value);
 }
 
-/**
- * Transform an element
- */
+// Create an `element`.
 function element(node, options = {}) {
   const { namespace } = options;
   const { tagName, properties, children = [] } = node;
@@ -115,11 +96,13 @@ function element(node, options = {}) {
     ? document.createElementNS(namespace, tagName)
     : document.createElement(tagName);
 
-  // Add HTML attributes
+  // Add HTML attributes.
   const props = Object.keys(properties);
   const { length } = props;
+
   for (let i = 0; i < length; i += 1) {
     const key = props[i];
+
     const {
       attribute,
       property,
@@ -128,22 +111,18 @@ function element(node, options = {}) {
       boolean,
       booleanish,
       overloadedBoolean,
-      // number,
-      // defined,
+      // `number`,
+      // `defined`,
       commaSeparated,
-      spaceSeparated,
-      // commaOrSpaceSeparated,
-    } = info.find(info.html, key) || {
-      attribute: key,
-      property: key,
-    };
+      // `spaceSeparated`,
+      // `commaOrSpaceSeparated`,
+    } = info.find(info.html, key) || { attribute: key, property: key };
 
     let value = properties[key];
+
     if (Array.isArray(value)) {
       if (commaSeparated) {
         value = value.join(', ');
-      } else if (spaceSeparated) {
-        value = value.join(' ');
       } else {
         value = value.join(' ');
       }
@@ -153,6 +132,7 @@ function element(node, options = {}) {
       if (mustUseProperty) {
         el[property] = value;
       }
+
       if (boolean || (overloadedBoolean && typeof value === 'boolean')) {
         if (value) {
           el.setAttribute(attribute, '');
@@ -170,14 +150,17 @@ function element(node, options = {}) {
       if (!mustUseAttribute && property) {
         el[property] = value;
       }
-      // Otherwise silently ignore
+
+      // Otherwise silently ignore.
     }
   }
 
-  // Transform children
+  // Transform children.
   const { length: childrenLength } = children;
+
   for (let i = 0; i < childrenLength; i += 1) {
     const childEl = transform(children[i], options);
+
     if (childEl) {
       el.appendChild(childEl);
     }
