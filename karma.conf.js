@@ -1,5 +1,4 @@
 const babel = require('rollup-plugin-babel');
-const { default: babelrc } = require('babelrc-rollup');
 const commonjs = require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
 
@@ -7,7 +6,7 @@ module.exports = function karmaConfig(config) {
   config.set({
     frameworks: ['jasmine'],
     files: [
-      'src/index.test.js',
+      { pattern: 'src/index.test.js', watched: false },
     ],
     preprocessors: {
       '**/*.test.js': ['rollup'],
@@ -24,7 +23,12 @@ module.exports = function karmaConfig(config) {
           extensions: ['.mjs', '.js', '.json', '.node'],
         }),
         commonjs(),
-        babel(babelrc()),
+        babel({
+          presets: [
+            ['@babel/preset-env', { modules: false }],
+          ],
+          babelrc: false,
+        }),
       ],
     },
     reporters: ['mocha'],
