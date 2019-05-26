@@ -48,6 +48,8 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-rollup-preprocessor": "^7.0.0",
     "karma-safari-launcher": "^1.0.0",
+    "remark-cli": "^6.0.1",
+    "remark-preset-wooorm": "^5.0.0",
     "rollup": "^1.0.0",
     "rollup-plugin-babel": "^4.0.1",
     "rollup-plugin-commonjs": "^10.0.0",
@@ -56,12 +58,17 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "rollup -c",
-    "lint": "eslint .",
+    "lint": "remark . -qfo && eslint .",
     "test": "jest",
     "test:karma": "karma start --single-run --browsers ChromeHeadless,FirefoxHeadless,Safari karma.conf.js",
     "test:karma:chrome": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "test:karma:firefox": "karma start --single-run --browsers FirefoxHeadless karma.conf.js",
     "test:karma:safari": "karma start --single-run --browsers Safari karma.conf.js",
     "test:dev": "jest --watchAll"
+  },
+  "remarkConfig": {
+    "plugins": [
+      "preset-wooorm"
+    ]
   }
 }

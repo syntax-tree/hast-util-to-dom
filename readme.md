@@ -55,7 +55,10 @@ console.log(new XMLSerializer().serializeToString(el));
 // "<div xmlns="http://www.w3.org/1999/xhtml">World</div>"
 ```
 
-Due to the nature of various browser implementations, you may notice cross-browser differences in the serialized output, especially with respect to whitespace or self-closing tags. Buddy, that's the web!
+Due to the nature of various browser implementations, you may notice
+cross-browser differences in the serialized output, especially with respect to
+whitespace or self-closing tags.
+Buddy, that’s the web!
 
 ## API
 
@@ -83,8 +86,4 @@ Transform a [HAST Node][node] to DOM `Node`.
 
 [hast]: https://github.com/syntax-tree/hast
 
-[hast-util-to-parse5]: https://github.com/syntax-tree/hast-util-to-parse5
-
 [node]: https://github.com/syntax-tree/hast#ast
-
-[vfile]: https://github.com/vfile/vfile
