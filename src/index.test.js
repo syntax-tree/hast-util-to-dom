@@ -1,4 +1,3 @@
-import bowser from 'bowser';
 import h from 'hastscript';
 
 import { serializeNodeToHtmlString } from './utils';
@@ -54,13 +53,14 @@ describe('hast-util-to-dom', () => {
         }],
       }],
     };
-    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
-    let htmlExpected = '<!DOCTYPE html><html><head></head><body></body></html>';
-    if (!bowser.x) {
-      if (bowser.gecko) {
-        htmlExpected = '<!DOCTYPE html>\n<html><head></head><body></body></html>';
-      }
+    const doctype = '<!DOCTYPE html>';
+    const htmlExpected = `${doctype}<html><head></head><body></body></html>`;
+    let htmlActual = serializeNodeToHtmlString(toDOM(tree));
+
+    if (htmlActual.charAt(doctype.length) === '\n') {
+      htmlActual = htmlActual.slice(0, doctype.length) + htmlActual.slice(doctype.length + 1);
     }
+
     expect(htmlActual).toEqual(htmlExpected);
   });
 
@@ -100,16 +100,15 @@ describe('hast-util-to-dom', () => {
       disabled: true,
       value: 'foo',
     });
-    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
-    let htmlExpected = '<input disabled="" value="foo">';
-    // Specific non-JSDOM environments
-    if (!bowser.x) {
-      if (bowser.webkit || bowser.blink) {
-        htmlExpected = '<input disabled="" value="foo" />';
-      } else if (bowser.gecko) {
-        htmlExpected = '<input disabled="disabled" value="foo" />';
-      }
+    const htmlExpected = '<input disabled="disabled" value="foo">';
+    let htmlActual = serializeNodeToHtmlString(toDOM(tree));
+
+    htmlActual = htmlActual.replace(/disabled=""/, 'disabled="disabled"');
+
+    if (htmlActual.slice(-3) === ' />') {
+      htmlActual = `${htmlActual.slice(0, -3)}>`;
     }
+
     expect(htmlActual).toEqual(htmlExpected);
   });
 
@@ -123,13 +122,13 @@ describe('hast-util-to-dom', () => {
   it('handles comma-separated attributes correctly', () => {
     const img = 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=';
     const tree = h('img', { srcSet: [`${img} 1x`, `${img} 2x`] });
-    const htmlActual = serializeNodeToHtmlString(toDOM(tree));
-    let htmlExpected = `<img srcset="${img} 1x, ${img} 2x">`;
-    if (!bowser.x) {
-      if (bowser.webkit || bowser.blink || bowser.gecko) {
-        htmlExpected = `<img srcset="${img} 1x, ${img} 2x" />`;
-      }
+    const htmlExpected = `<img srcset="${img} 1x, ${img} 2x">`;
+    let htmlActual = serializeNodeToHtmlString(toDOM(tree));
+
+    if (htmlActual.slice(-3) === ' />') {
+      htmlActual = `${htmlActual.slice(0, -3)}>`;
     }
+
     expect(htmlActual).toEqual(htmlExpected);
   });
 
