@@ -11,7 +11,7 @@ export default {
   plugins: [
     babel({
       presets: [
-        ['env', { modules: false }],
+        ['@babel/preset-env', { modules: false }],
       ],
       babelrc: false,
     }),
