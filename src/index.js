@@ -20,7 +20,7 @@ function transform(node, options) {
 
 // Create a document.
 function root(node, options) {
-  const { fragment, namespace: optionsNamespace } = options;
+  const { doc, fragment, namespace: optionsNamespace } = options;
   const { children = [] } = node;
   const { length: childrenLength } = children;
 
@@ -45,19 +45,19 @@ function root(node, options) {
   let el;
 
   if (rootIsDocument) {
-    el = document.implementation.createDocument(namespace, '', null);
+    el = doc.implementation.createDocument(namespace, '', null);
   } else if (fragment) {
-    el = document.createDocumentFragment();
+    el = doc.createDocumentFragment();
   } else {
-    el = document.createElement('html');
+    el = doc.createElement('html');
   }
 
   return appendAll(el, children, Object.assign({ fragment, namespace }, options));
 }
 
 // Create a `doctype`.
-function doctype(node) {
-  return document.implementation.createDocumentType(
+function doctype(node, { doc }) {
+  return doc.implementation.createDocumentType(
     node.name || 'html',
     node.public || '',
     node.system || '',
@@ -65,23 +65,23 @@ function doctype(node) {
 }
 
 // Create a `text`.
-function text(node) {
-  return document.createTextNode(node.value);
+function text(node, { doc }) {
+  return doc.createTextNode(node.value);
 }
 
 // Create a `comment`.
-function comment(node) {
-  return document.createComment(node.value);
+function comment(node, { doc }) {
+  return doc.createComment(node.value);
 }
 
 // Create an `element`.
 function element(node, options) {
-  const { namespace } = options;
+  const { namespace, doc } = options;
   // TODO: use `g` in SVG space.
   const { tagName = 'div', properties = {}, children = [] } = node;
   const el = typeof namespace !== 'undefined'
-    ? document.createElementNS(namespace, tagName)
-    : document.createElement(tagName);
+    ? doc.createElementNS(namespace, tagName)
+    : doc.createElement(tagName);
 
   // Add HTML attributes.
   const props = Object.keys(properties);
@@ -146,5 +146,5 @@ function appendAll(node, children, options) {
 
 
 export default function toDOM(hast, options = {}) {
-  return transform(hast, options);
+  return transform(hast, { ...options, doc: options.document || document });
 }
