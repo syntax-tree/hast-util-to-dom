@@ -2,7 +2,8 @@ import ns from 'web-namespaces';
 import h from 'hastscript';
 import s from 'hastscript/svg';
 
-import { serializeNodeToHtmlString } from './utils';
+import serializeNodeToHtmlString from './utils';
+
 import toDOM from './index';
 
 describe('hast-util-to-dom', () => {
@@ -27,9 +28,7 @@ describe('hast-util-to-dom', () => {
   });
 
   it('creates a root node with a doctype', () => {
-    const doctype = '<!DOCTYPE html>';
-
-    let actual = serializeNodeToHtmlString(toDOM({
+    const actual = serializeNodeToHtmlString(toDOM({
       type: 'root',
       children: [{
         type: 'doctype',
@@ -53,10 +52,6 @@ describe('hast-util-to-dom', () => {
         }],
       }],
     }));
-
-    if (actual.charAt(doctype.length) === '\n') {
-      actual = actual.slice(0, doctype.length) + actual.slice(doctype.length + 1);
-    }
 
     expect(actual).toEqual('<!DOCTYPE html><html><head></head><body></body></html>');
   });
@@ -114,37 +109,25 @@ describe('hast-util-to-dom', () => {
       { namespace: ns.svg },
     ));
 
-    expect(actual).toEqual('<g id="foo" class="bar"><circle></circle></g>');
+    expect(actual).toEqual('<g xmlns="http://www.w3.org/2000/svg" id="foo" class="bar"><circle/></g>');
   });
 
   it('creates an input node with some attributes', () => {
-    let actual = serializeNodeToHtmlString(toDOM(h('input', {
+    const actual = serializeNodeToHtmlString(toDOM(h('input', {
       disabled: true,
       value: 'foo',
     })));
 
-    actual = actual.replace(/disabled=""/, 'disabled="disabled"');
-
-    if (actual.slice(-3) === ' />') {
-      actual = `${actual.slice(0, -3)}>`;
-    }
-
-    expect(actual).toEqual('<input disabled="disabled" value="foo">');
+    expect(actual).toEqual('<input disabled="" value="foo" />');
   });
 
   it('creates an checkbox where `checked` must be set as a property', () => {
-    let actual = serializeNodeToHtmlString(toDOM(h('input', {
+    const actual = serializeNodeToHtmlString(toDOM(h('input', {
       type: 'checkbox',
       checked: true,
     })));
 
-    actual = actual.replace(/checked=""/, 'checked="checked"');
-
-    if (actual.slice(-3) === ' />') {
-      actual = `${actual.slice(0, -3)}>`;
-    }
-
-    expect(actual).toEqual('<input type="checkbox" checked="checked">');
+    expect(actual).toEqual('<input type="checkbox" checked="" />');
   });
 
   it('handles falsey booleans correctly', () => {
@@ -168,16 +151,11 @@ describe('hast-util-to-dom', () => {
 
   it('handles comma-separated attributes correctly', () => {
     const img = 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=';
-
-    let actual = serializeNodeToHtmlString(toDOM(h('img', {
+    const actual = serializeNodeToHtmlString(toDOM(h('img', {
       srcSet: [`${img} 1x`, `${img} 2x`],
     })));
 
-    if (actual.slice(-3) === ' />') {
-      actual = `${actual.slice(0, -3)}>`;
-    }
-
-    expect(actual).toEqual(`<img srcset="${img} 1x, ${img} 2x">`);
+    expect(actual).toEqual(`<img srcset="${img} 1x, ${img} 2x" />`);
   });
 
   it('creates a doctype node', () => {
@@ -268,12 +246,12 @@ describe('hast-util-to-dom', () => {
     expect(actual).toEqual('<title>Hi</title><h2>Hello world!</h2>');
   });
 
-  it('should support an inferred namespace', () => {
+  it('should support a given namespace', () => {
     const actual = serializeNodeToHtmlString(
       toDOM({ type: 'root', children: [h('html')] }, { namespace: 'http://example.com' }),
     );
 
-    expect(actual).toEqual('<html></html>');
+    expect(actual).toEqual('<html xmlns="http://example.com"/>');
   });
 
   describe('booleanish property', () => {

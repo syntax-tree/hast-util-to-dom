@@ -1,6 +1,7 @@
 const babel = require('rollup-plugin-babel');
 const commonjs = require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
+const json = require('rollup-plugin-json');
 
 module.exports = function karmaConfig(config) {
   config.set({
@@ -22,6 +23,7 @@ module.exports = function karmaConfig(config) {
           browser: true,
           extensions: ['.mjs', '.js', '.json', '.node'],
         }),
+        json(),
         commonjs(),
         babel({
           presets: [
