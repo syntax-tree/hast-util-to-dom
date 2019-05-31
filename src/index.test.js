@@ -254,6 +254,37 @@ describe('hast-util-to-dom', () => {
     expect(actual).toEqual('<html xmlns="http://example.com"/>');
   });
 
+  it('should support a given document', () => {
+    const doc = {
+      createElementNS(namespace, tagName) {
+        const name = tagName === 'h1' ? 'h2' : tagName;
+        return document.createElementNS(namespace, name);
+      },
+      createTextNode(value) {
+        return document.createTextNode(value.toUpperCase());
+      },
+      implementation: {
+        createDocument(namespace, qualifiedName, documentType) {
+          return document.implementation.createDocument(namespace, qualifiedName, documentType);
+        },
+      },
+    };
+
+    const actual = serializeNodeToHtmlString(
+      toDOM({
+        type: 'root',
+        children: [
+          h('html', [
+            h('title', 'foo'),
+            h('h1', 'bar'),
+          ]),
+        ],
+      }, { document: doc }),
+    );
+
+    expect(actual).toEqual('<html><title>FOO</title><h2>BAR</h2></html>');
+  });
+
   describe('booleanish property', () => {
     it('handles booleanish attribute with `true` value correctly', () => {
       const actual = serializeNodeToHtmlString(toDOM(h('div', {

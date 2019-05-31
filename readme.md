@@ -80,6 +80,10 @@ Transform a [**hast**][hast] [*tree*][tree] to a DOM tree.
 
 Whether a DOM fragment should be returned (default: `false`).
 
+###### `options.document`
+
+Document interface to use (default: `global.document`).
+
 ###### `options.namespace`
 
 `namespace` to use to create [*elements*][element].
