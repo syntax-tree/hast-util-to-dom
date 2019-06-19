@@ -1,5 +1,6 @@
 import ns from 'web-namespaces';
-import info from 'property-information';
+import find from 'property-information/find';
+import schema from 'property-information/html';
 
 function transform(node, options) {
   switch (node.type) {
@@ -103,7 +104,7 @@ function element(node, options) {
       commaSeparated,
       // `spaceSeparated`,
       // `commaOrSpaceSeparated`,
-    } = info.find(info.html, key);
+    } = find(schema, key);
 
     let value = properties[key];
 
