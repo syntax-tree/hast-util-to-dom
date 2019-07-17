@@ -88,6 +88,12 @@ Document interface to use (default: `global.document`).
 
 `namespace` to use to create [*elements*][element].
 
+## Security
+
+Use of `hast-util-to-dom` can open you up to a
+[cross-site scripting (XSS)][xss] attack if the hast tree is unsafe.
+Use [`hast-util-santize`][sanitize] to make the hast tree safe.
+
 ## Related
 
 *   [`hast-util-sanitize`](https://github.com/syntax-tree/hast-util-sanitize)
@@ -158,3 +164,7 @@ abide by its terms.
 [element]: https://github.com/syntax-tree/hast#element
 
 [tree]: https://github.com/syntax-tree/unist#tree
+
+[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+
+[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
