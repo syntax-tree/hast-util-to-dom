@@ -57,7 +57,9 @@ function root(node, options) {
   return appendAll(
     el,
     children,
-    Object.assign({ fragment, namespace, impliedNamespace: namespace }, options),
+    {
+      ...options, fragment, namespace, impliedNamespace: namespace,
+    },
   );
 }
 
