@@ -19,6 +19,7 @@ export default {
   external: [
     'property-information/find',
     'property-information/html',
+    'property-information/svg',
     'web-namespaces',
   ],
 };
