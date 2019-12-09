@@ -71,10 +71,18 @@ describe('hast-util-to-dom', () => {
     expect(actual).toEqual('<div></div>');
   });
 
-  it('creates an unknown node', () => {
+  it('creates an unknown node in HTML', () => {
     const actual = serializeNodeToHtmlString(toDOM({ type: 'something-else' }));
 
     expect(actual).toEqual('<div></div>');
+  });
+
+  it('creates an unknown node in SVG', () => {
+    const actual = serializeNodeToHtmlString(
+      toDOM({ type: 'something-else' }, { namespace: ns.svg }),
+    );
+
+    expect(actual).toEqual('<g/>');
   });
 
   it('creates an unknown node (with children)', () => {
@@ -109,7 +117,7 @@ describe('hast-util-to-dom', () => {
       { namespace: ns.svg },
     ));
 
-    expect(actual).toEqual('<g xmlns="http://www.w3.org/2000/svg" id="foo" class="bar"><circle/></g>');
+    expect(actual).toEqual('<g id="foo" class="bar"><circle/></g>');
   });
 
   it('creates an input node with some attributes', () => {

@@ -1,6 +1,7 @@
 import ns from 'web-namespaces';
 import find from 'property-information/find';
-import schema from 'property-information/html';
+import html from 'property-information/html';
+import svg from 'property-information/svg';
 
 function transform(node, options) {
   switch (node.type) {
@@ -53,7 +54,11 @@ function root(node, options) {
     el = doc.createElement('html');
   }
 
-  return appendAll(el, children, Object.assign({ fragment, namespace }, options));
+  return appendAll(
+    el,
+    children,
+    Object.assign({ fragment, namespace, impliedNamespace: namespace }, options),
+  );
 }
 
 // Create a `doctype`.
@@ -78,11 +83,21 @@ function comment(node, { doc }) {
 // Create an `element`.
 function element(node, options) {
   const { namespace, doc } = options;
-  // TODO: use `g` in SVG space.
-  const { tagName = 'div', properties = {}, children = [] } = node;
-  const el = typeof namespace !== 'undefined'
-    ? doc.createElementNS(namespace, tagName)
-    : doc.createElement(tagName);
+  let impliedNamespace = options.impliedNamespace || namespace;
+  const { tagName = impliedNamespace === ns.svg ? 'g' : 'div', properties = {}, children = [] } = node;
+
+  if (
+    (impliedNamespace === null || impliedNamespace === undefined || impliedNamespace === ns.html)
+    && tagName === 'svg'
+  ) {
+    impliedNamespace = ns.svg;
+  }
+
+  const schema = impliedNamespace === ns.svg ? svg : html;
+
+  const el = impliedNamespace === null || impliedNamespace === undefined
+    ? doc.createElement(tagName)
+    : doc.createElementNS(impliedNamespace, tagName);
 
   // Add HTML attributes.
   const props = Object.keys(properties);
@@ -131,7 +146,7 @@ function element(node, options) {
     }
   }
 
-  return appendAll(el, children, options);
+  return appendAll(el, children, { ...options, impliedNamespace });
 }
 
 // Add all children.

@@ -21,7 +21,7 @@ describe('fixtures', () => {
       let parsedExpected;
 
       try {
-        parsedExpected = fs.readFileSync(fixtureOutput).toString();
+        parsedExpected = fs.readFileSync(fixtureOutput).toString().trim();
       } catch (e) {
         fs.writeFileSync(fixtureOutput, parsedActual);
         return;
