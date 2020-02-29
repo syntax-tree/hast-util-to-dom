@@ -1,11 +1,9 @@
 import ns from 'web-namespaces';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { XMLSerializer as Serializer } from 'w3c-xmlserializer';
-
-const XMLSerializer = Serializer.interface;
+import serialize from 'w3c-xmlserializer';
 
 export default function serializeNodeToHtmlString(node) {
-  const serialized = new XMLSerializer().serializeToString(node);
+  const serialized = serialize(node);
 
   // XMLSerializer puts xmlns on “main” elements that are not in the XML
   // namespace.
