@@ -1,6 +1,6 @@
 {
   "name": "hast-util-to-dom",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "hast utility to transform to the DOM",
   "license": "ISC",
   "keywords": [
