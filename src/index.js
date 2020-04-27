@@ -4,6 +4,7 @@ import html from 'property-information/html';
 import svg from 'property-information/svg';
 
 function transform(node, options) {
+  if (node.nodeType) return node;
   switch (node.type) {
     case 'root':
       return root(node, options);

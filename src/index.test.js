@@ -293,6 +293,27 @@ describe('hast-util-to-dom', () => {
     expect(actual).toEqual('<html><title>FOO</title><h2>BAR</h2></html>');
   });
 
+  it('should support nested Nodes', () => {
+    const child = toDOM(
+      {
+        type: 'element',
+        tagName: 'h1',
+        properties: { className: 'child-class' },
+        children: [{ type: 'text', value: 'World!' }],
+      },
+    );
+    const parent = toDOM(
+      {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: 'parent-class' },
+        children: [child, { type: 'text', value: 'And Beyond!' }],
+      },
+    );
+    const actual = serializeNodeToHtmlString(parent);
+    expect(actual).toEqual('<div class="parent-class"><h1 class="child-class">World!</h1>And Beyond!</div>');
+  });
+
   describe('booleanish property', () => {
     it('handles booleanish attribute with `true` value correctly', () => {
       const actual = serializeNodeToHtmlString(toDOM(h('div', {
