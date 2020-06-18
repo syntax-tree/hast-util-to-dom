@@ -162,7 +162,6 @@ function appendAll(node, children, options) {
   return node;
 }
 
-
 export default function toDOM(hast, options = {}) {
   return transform(hast, { ...options, doc: options.document || document });
 }

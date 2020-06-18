@@ -1,20 +1,20 @@
 module.exports = {
   extends: [
-    'airbnb-base'
+    'airbnb-base',
   ],
   parser: 'babel-eslint',
   env: {
-    es6: true
+    es6: true,
   },
   overrides: [{
     files: ['*.test.*'],
     env: {
-      jest: true
-    }
+      jest: true,
+    },
   }, {
     files: ['karma.conf.js'],
     env: {
-      node: true
+      node: true,
     },
     rules: {
       'import/no-extraneous-dependencies': 'off',
@@ -22,7 +22,7 @@ module.exports = {
   }, {
     files: ['src/*'],
     env: {
-      browser: true
+      browser: true,
     },
   }],
   rules: {

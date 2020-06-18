@@ -1,7 +1,7 @@
-const babel = require('rollup-plugin-babel');
-const commonjs = require('rollup-plugin-commonjs');
-const resolve = require('rollup-plugin-node-resolve');
-const json = require('rollup-plugin-json');
+const babel = require('@rollup/plugin-babel').default;
+const commonjs = require('@rollup/plugin-commonjs');
+const json = require('@rollup/plugin-json');
+const resolve = require('@rollup/plugin-node-resolve').default;
 
 module.exports = function karmaConfig(config) {
   config.set({
