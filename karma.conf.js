@@ -7,17 +7,13 @@ module.exports = function karmaConfig(config) {
   config.set({
     frameworks: ['jasmine'],
     files: [
-      { pattern: 'src/index.test.js', watched: false },
+      { pattern: 'src/index.test.js' },
     ],
     preprocessors: {
-      '**/*.test.js': ['rollup'],
+      'src/*.test.js': ['rollup'],
     },
     rollupPreprocessor: {
-      output: {
-        name: 'Test',
-        format: 'iife',
-        sourcemap: 'inline',
-      },
+      output: { format: 'iife' },
       plugins: [
         resolve({
           browser: true,
@@ -33,19 +29,5 @@ module.exports = function karmaConfig(config) {
         }),
       ],
     },
-    reporters: ['mocha'],
-    port: 9876, // karma web server port
-    colors: true,
-    logLevel: config.LOG_INFO,
-    browsers: [
-      'Chrome',
-      'ChromeHeadless',
-      'Firefox',
-      'FirefoxHeadless',
-      'Safari',
-    ],
-    autoWatch: false,
-    // singleRun: false, // Karma captures browsers, runs the tests and exits
-    concurrency: Infinity,
   });
 };
