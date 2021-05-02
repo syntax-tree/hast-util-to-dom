@@ -61,7 +61,6 @@
     "xo": "^0.38.0"
   },
   "scripts": {
-    "clean": "rm -rf dist",
     "build": "rollup -c",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
     "test:api": "jest",
@@ -70,7 +69,7 @@
     "test:karma:firefox": "karma start --single-run --browsers FirefoxHeadless",
     "test:karma:safari": "karma start --single-run --browsers Safari",
     "test:dev": "jest --watchAll",
-    "test": "yarn build && yarn format && yarn test:api"
+    "test": "npm run build && npm run format && npm run test:api"
   },
   "prettier": {
     "tabWidth": 2,
