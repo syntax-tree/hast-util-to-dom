@@ -165,15 +165,9 @@ test('hast-util-to-dom', (t) => {
   )
 
   t.equal(
-    serializeNodeToHtmlString(
-      toDom({
-        type: 'doctype',
-        name: 'html',
-        public: null,
-        system: 'http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd'
-      })
-    ),
-    '<!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd">',
+    // @ts-ignore hast types out of date.
+    serializeNodeToHtmlString(toDom({type: 'doctype'})),
+    '<!DOCTYPE html>',
     'creates a doctype node'
   )
 
