@@ -24,52 +24,34 @@
     "Keith McKnight <keith@mcknig.ht> (https://keith.mcknig.ht)",
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
-  "main": "dist/hast-util-to-dom.js",
-  "module": "dist/hast-util-to-dom.mjs",
+  "sideEffects": false,
+  "type": "module",
+  "main": "index.js",
   "files": [
-    "dist/"
+    "lib/",
+    "index.js"
   ],
   "dependencies": {
-    "property-information": "^5.1.0",
-    "web-namespaces": "^1.1.3"
+    "property-information": "^6.0.0",
+    "web-namespaces": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-external-helpers": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@rollup/plugin-babel": "^5.0.0",
-    "@rollup/plugin-commonjs": "^18.0.0",
-    "@rollup/plugin-json": "^4.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
-    "babel-jest": "^26.0.0",
+    "c8": "^7.0.0",
     "glob": "^7.0.0",
-    "hastscript": "^6.0.0",
-    "jasmine-core": "^3.0.0",
-    "jest-cli": "^26.0.0",
-    "karma": "^6.0.0",
-    "karma-chrome-launcher": "^3.0.0",
-    "karma-firefox-launcher": "^2.0.0",
-    "karma-jasmine": "^4.0.0",
-    "karma-mocha-reporter": "^2.0.0",
-    "karma-rollup-preprocessor": "^7.0.0",
-    "karma-safari-launcher": "^1.0.0",
+    "hastscript": "^7.0.0",
+    "jsdom": "^16.5.3",
     "prettier": "^2.0.0",
     "remark-cli": "^9.0.0",
     "remark-preset-wooorm": "^8.0.0",
-    "rollup": "^2.0.0",
+    "tape": "^5.0.0",
     "w3c-xmlserializer": "^2.0.0",
-    "xo": "^0.38.0"
+    "xo": "^0.39.0"
   },
   "scripts": {
-    "build": "rollup -c",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
-    "test:api": "jest",
-    "test:karma": "karma start --single-run --browsers ChromeHeadless,FirefoxHeadless,Safari",
-    "test:karma:chrome": "karma start --single-run --browsers ChromeHeadless",
-    "test:karma:firefox": "karma start --single-run --browsers FirefoxHeadless",
-    "test:karma:safari": "karma start --single-run --browsers Safari",
-    "test:dev": "jest --watchAll",
-    "test": "npm run build && npm run format && npm run test:api"
+    "test-api": "node test/index.js",
+    "test-coverage": "c8 --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 --reporter lcov node test/index.js",
+    "test": "npm run format && npm run test-coverage"
   },
   "prettier": {
     "tabWidth": 2,
@@ -81,20 +63,6 @@
   },
   "xo": {
     "prettier": true
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/src/utils.js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    }
   },
   "remarkConfig": {
     "plugins": [

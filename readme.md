@@ -12,11 +12,8 @@
 
 ## Install
 
-[yarn][]:
-
-```sh
-yarn add hast-util-to-dom
-```
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
 
 [npm][]:
 
@@ -69,6 +66,9 @@ whitespace or self-closing tags.
 Buddy, that’s the web!
 
 ## API
+
+This package exports the following identifiers: `toDom`.
+There is no default export.
 
 ### `toDom(node[, options])`
 
@@ -144,8 +144,6 @@ abide by its terms.
 [chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
 
 [chat]: https://github.com/syntax-tree/unist/discussions
-
-[yarn]: https://yarnpkg.com/lang/en/docs/install
 
 [npm]: https://docs.npmjs.com/cli/install
 
