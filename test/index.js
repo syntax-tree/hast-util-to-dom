@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('../lib/index.js').HastNode} HastNode
+ */
+
 import fs from 'fs'
 import path from 'path'
 import test from 'tape'
@@ -8,10 +12,14 @@ import {h, s} from 'hastscript'
 import serialize from 'w3c-xmlserializer'
 import {toDom} from '../index.js'
 
-globalThis.document = new JSDOM().window.document
+const window = new JSDOM().window
+const document = window.document
+
+globalThis.document = document
 
 test('hast-util-to-dom', (t) => {
   t.equal(
+    // @ts-ignore runtime.
     serializeNodeToHtmlString(toDom({type: 'root'})),
     '',
     'creates an empty root node'
@@ -65,6 +73,7 @@ test('hast-util-to-dom', (t) => {
   )
 
   t.equal(
+    // @ts-ignore runtime.
     serializeNodeToHtmlString(toDom({type: 'something-else'})),
     '<div></div>',
     'creates an unknown node in HTML'
@@ -72,6 +81,7 @@ test('hast-util-to-dom', (t) => {
 
   t.equal(
     serializeNodeToHtmlString(
+      // @ts-ignore runtime.
       toDom({type: 'something-else'}, {namespace: webNamespaces.svg})
     ),
     '<g/>',
@@ -81,6 +91,7 @@ test('hast-util-to-dom', (t) => {
   t.equal(
     serializeNodeToHtmlString(
       toDom({
+        // @ts-ignore runtime.
         type: 'something-else',
         children: [{type: 'text', value: 'value'}]
       })
@@ -250,16 +261,28 @@ test('hast-util-to-dom', (t) => {
   )
 
   const doc = {
+    /**
+     * @param {string} namespace
+     * @param {string} tagName
+     */
     createElementNS(namespace, tagName) {
       const name = tagName === 'h1' ? 'h2' : tagName
-      return globalThis.document.createElementNS(namespace, name)
+      return document.createElementNS(namespace, name)
     },
+    /**
+     * @param {string} value
+     */
     createTextNode(value) {
-      return globalThis.document.createTextNode(value.toUpperCase())
+      return document.createTextNode(value.toUpperCase())
     },
     implementation: {
+      /**
+       * @param {string} namespace
+       * @param {string} qualifiedName
+       * @param {DocumentType} documentType
+       */
       createDocument(namespace, qualifiedName, documentType) {
-        return globalThis.document.implementation.createDocument(
+        return document.implementation.createDocument(
           namespace,
           qualifiedName,
           documentType
@@ -275,6 +298,7 @@ test('hast-util-to-dom', (t) => {
           type: 'root',
           children: [h('html', [h('title', 'foo'), h('h1', 'bar')])]
         },
+        // @ts-ignore Minimum of what we need.
         {document: doc}
       )
     ),
@@ -356,12 +380,17 @@ test('fixtures', (t) => {
 
   t.end()
 
+  /**
+   * @param {string} fixturePath
+   */
   function each(fixturePath) {
     const fixture = path.relative(root, fixturePath)
     const fixtureInput = path.join(fixturePath, 'index.json')
     const fixtureOutput = path.join(fixturePath, 'index.html')
-    const fixtureData = JSON.parse(fs.readFileSync(fixtureInput))
+    /** @type {HastNode} */
+    const fixtureData = JSON.parse(String(fs.readFileSync(fixtureInput)))
     const parsedActual = serializeNodeToHtmlString(toDom(fixtureData))
+    /** @type {string} */
     let parsedExpected
 
     try {
@@ -375,6 +404,9 @@ test('fixtures', (t) => {
   }
 })
 
+/**
+ * @param {Node} node
+ */
 function serializeNodeToHtmlString(node) {
   const serialized = serialize(node)
 

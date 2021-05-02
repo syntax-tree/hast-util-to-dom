@@ -82,7 +82,7 @@ Whether a DOM fragment should be returned (default: `false`).
 
 ###### `options.document`
 
-Document interface to use (default: `global.document`).
+Document interface to use (default: `globalThis.document`).
 
 ###### `options.namespace`
 
