@@ -1,9 +1,8 @@
-import ns from 'web-namespaces';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import serialize from 'w3c-xmlserializer';
+import ns from 'web-namespaces'
+import serialize from 'w3c-xmlserializer'
 
 export default function serializeNodeToHtmlString(node) {
-  const serialized = serialize(node);
+  const serialized = serialize(node)
 
   // XMLSerializer puts xmlns on “main” elements that are not in the XML
   // namespace.
@@ -11,5 +10,5 @@ export default function serializeNodeToHtmlString(node) {
   // get unwieldy, so remove those.
   return serialized
     .replace(new RegExp(` xmlns="${ns.html}"`, 'g'), '')
-    .replace(new RegExp(`(<(?:svg|g)) xmlns="${ns.svg}"`, 'g'), '$1');
+    .replace(new RegExp(`(<(?:svg|g)) xmlns="${ns.svg}"`, 'g'), '$1')
 }

@@ -41,11 +41,7 @@
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
-    "babel-eslint": "^10.0.0",
     "babel-jest": "^26.0.0",
-    "eslint": "^7.0.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.0.0",
     "glob": "^7.0.0",
     "hastscript": "^6.0.0",
     "jasmine-core": "^3.0.0",
@@ -57,15 +53,17 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-rollup-preprocessor": "^7.0.0",
     "karma-safari-launcher": "^1.0.0",
+    "prettier": "^2.0.0",
     "remark-cli": "^9.0.0",
     "remark-preset-wooorm": "^8.0.0",
     "rollup": "^2.0.0",
-    "w3c-xmlserializer": "^2.0.0"
+    "w3c-xmlserializer": "^2.0.0",
+    "xo": "^0.38.0"
   },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "rollup -c",
-    "format": "remark . -qfo && eslint . --fix",
+    "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
     "test:api": "jest",
     "test:karma": "karma start --single-run --browsers ChromeHeadless,FirefoxHeadless,Safari",
     "test:karma:chrome": "karma start --single-run --browsers ChromeHeadless",
@@ -73,6 +71,17 @@
     "test:karma:safari": "karma start --single-run --browsers Safari",
     "test:dev": "jest --watchAll",
     "test": "yarn build && yarn format && yarn test:api"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "semi": false,
+    "trailingComma": "none"
+  },
+  "xo": {
+    "prettier": true
   },
   "jest": {
     "collectCoverage": true,
