@@ -26,7 +26,7 @@ npm install hast-util-to-dom
 This utility is intended for browser use!
 
 ```js
-import toDom from 'hast-util-to-dom';
+import {toDom} from 'hast-util-to-dom';
 
 const el = toDom({
   type: 'element',
