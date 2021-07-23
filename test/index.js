@@ -2,8 +2,8 @@
  * @typedef {import('../lib/index.js').HastNode} HastNode
  */
 
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import test from 'tape'
 import glob from 'glob'
 import {JSDOM} from 'jsdom'
