@@ -38,6 +38,7 @@
     "web-namespaces": "^2.0.0"
   },
   "devDependencies": {
+    "@types/glob": "^7.0.0",
     "@types/jsdom": "^16.0.0",
     "@types/tape": "^4.0.0",
     "@types/w3c-xmlserializer": "^2.0.0",

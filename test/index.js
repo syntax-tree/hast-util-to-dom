@@ -19,7 +19,7 @@ globalThis.document = document
 
 test('hast-util-to-dom', (t) => {
   t.equal(
-    // @ts-ignore runtime.
+    // @ts-expect-error runtime.
     serializeNodeToHtmlString(toDom({type: 'root'})),
     '',
     'creates an empty root node'
@@ -43,7 +43,7 @@ test('hast-util-to-dom', (t) => {
       toDom({
         type: 'root',
         children: [
-          {type: 'doctype', name: 'html', public: null, system: null},
+          {type: 'doctype', name: 'html', public: undefined, system: undefined},
           {
             type: 'element',
             tagName: 'html',
@@ -73,7 +73,7 @@ test('hast-util-to-dom', (t) => {
   )
 
   t.equal(
-    // @ts-ignore runtime.
+    // @ts-expect-error runtime.
     serializeNodeToHtmlString(toDom({type: 'something-else'})),
     '<div></div>',
     'creates an unknown node in HTML'
@@ -81,7 +81,7 @@ test('hast-util-to-dom', (t) => {
 
   t.equal(
     serializeNodeToHtmlString(
-      // @ts-ignore runtime.
+      // @ts-expect-error runtime.
       toDom({type: 'something-else'}, {namespace: webNamespaces.svg})
     ),
     '<g/>',
@@ -91,7 +91,7 @@ test('hast-util-to-dom', (t) => {
   t.equal(
     serializeNodeToHtmlString(
       toDom({
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         type: 'something-else',
         children: [{type: 'text', value: 'value'}]
       })
@@ -165,7 +165,7 @@ test('hast-util-to-dom', (t) => {
   )
 
   t.equal(
-    // @ts-ignore hast types out of date.
+    // @ts-expect-error hast types out of date.
     serializeNodeToHtmlString(toDom({type: 'doctype'})),
     '<!DOCTYPE html>',
     'creates a doctype node'
@@ -292,7 +292,7 @@ test('hast-util-to-dom', (t) => {
           type: 'root',
           children: [h('html', [h('title', 'foo'), h('h1', 'bar')])]
         },
-        // @ts-ignore Minimum of what we need.
+        // @ts-expect-error Minimum of what we need.
         {document: doc}
       )
     ),
