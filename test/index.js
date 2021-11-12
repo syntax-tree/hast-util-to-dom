@@ -43,7 +43,7 @@ test('hast-util-to-dom', (t) => {
       toDom({
         type: 'root',
         children: [
-          {type: 'doctype', name: 'html', public: undefined, system: undefined},
+          {type: 'doctype', name: 'html'},
           {
             type: 'element',
             tagName: 'html',
