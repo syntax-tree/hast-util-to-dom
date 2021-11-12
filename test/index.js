@@ -155,12 +155,11 @@ test('hast-util-to-dom', (t) => {
     'handles space-separated attributes correctly'
   )
 
-  const img = 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='
   t.equal(
     serializeNodeToHtmlString(
-      toDom(h('img', {srcSet: [`${img} 1x`, `${img} 2x`]}))
+      toDom(h('input', {type: 'file', accept: ['image/*', '.doc']}))
     ),
-    `<img srcset="${img} 1x, ${img} 2x" />`,
+    `<input type="file" accept="image/*, .doc" />`,
     'handles comma-separated attributes correctly'
   )
 
