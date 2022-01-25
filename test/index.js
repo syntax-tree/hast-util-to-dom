@@ -359,6 +359,25 @@ test('hast-util-to-dom', (t) => {
     'encodes data properties when string'
   )
 
+  t.deepEqual(
+    (() => {
+      /** @type {Array<[HastNode, string]>} */
+      const calls = []
+      toDom(h('html', [h('title', 'Hi')]), {
+        afterTransform: (node, transformed) => {
+          calls.push([node, serializeNodeToHtmlString(transformed)])
+        }
+      })
+      return calls
+    })(),
+    [
+      [{type: 'text', value: 'Hi'}, 'Hi'],
+      [h('title', 'Hi'), '<title>Hi</title>'],
+      [h('html', [h('title', 'Hi')]), '<html><title>Hi</title></html>']
+    ],
+    'should invoke afterTransform'
+  )
+
   t.end()
 })
 

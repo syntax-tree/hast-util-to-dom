@@ -88,6 +88,10 @@ Document interface to use (default: `globalThis.document`).
 
 `namespace` to use to create [*elements*][element].
 
+###### `options.afterTransform(node, transformed)`
+
+Callback invoked after each node transformation (`Function`).
+
 ## Security
 
 Use of `hast-util-to-dom` can open you up to a
