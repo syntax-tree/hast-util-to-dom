@@ -88,6 +88,12 @@ Document interface to use (default: `globalThis.document`).
 
 `namespace` to use to create [*elements*][element].
 
+###### `options.afterTransform`
+
+Function called when a hast node is transformed into a DOM node (`Function?`).
+Given the hast node that was handled as the first parameter and the
+corresponding DOM node as the second parameter.
+
 ## Security
 
 Use of `hast-util-to-dom` can open you up to a
