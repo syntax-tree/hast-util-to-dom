@@ -8,115 +8,158 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**hast**][hast] utility to transform to a DOM tree.
+[hast][] utility to transform to a [DOM][] tree.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`toDom(node[, options])`](#todomnode-options)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that creates a DOM tree (defaulting to the actual DOM
+but also supporting things like [`jsdom`][jsdom]) from a [hast][] (HTML) syntax
+tree.
+
+## When should I use this?
+
+You can use this project when you want to turn hast into a DOM in browsers,
+either to use it directly on a page, or to enable the use of DOM APIs (such as
+`querySelector` to find things or `innerHTML` to serialize stuff).
+
+The hast utility [`hast-util-from-dom`][hast-util-from-dom] does the inverse of
+this utility.
+It turns DOM trees into hast.
+
+The rehype plugin [`rehype-dom-stringify`][rehype-dom-stringify] wraps this
+utility to serialize as HTML with DOM APIs.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
 
 ```sh
-npm install hast-util-to-dom
+npm install hast-util-from-dom
+```
+
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {toDom} from 'https://esm.sh/hast-util-to-dom@3'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {toDom} from 'https://esm.sh/hast-util-to-dom@3?bundle'
+</script>
 ```
 
 ## Use
 
-This utility is intended for browser use!
-
-```js
-import {toDom} from 'hast-util-to-dom';
-
-const el = toDom({
-  type: 'element',
-  tagName: 'h1',
-  properties: {},
-  children: [{type: 'text', value: 'World!'}]
-});
-
-console.log(el);
-```
-
-This will create a DOM node like this:
+Say our page `example.html` looks as follows:
 
 ```html
-<h1>World!</h1>
+<!doctype html>
+<title>Example</title>
+<body>
+  <script type="module">
+    import {h} from 'https://esm.sh/hastscript?bundle'
+    import {toDom} from 'https://esm.sh/hast-util-to-dom?bundle'
+
+    const tree = h('main', [
+      h('h1', 'Hi'),
+      h('p', [h('em', 'Hello'), ', world!'])
+    ])
+
+    document.body.append(toDom(tree))
+  </script>
 ```
 
-If you want a string of HTML, you have a few options:
-
-```js
-// Outer HTML, eg. if you want an entire fragment
-console.log(el.outerHTML);
-// "<h1>World</h1>"
-
-// Inner HTML, eg. if you have a wrapping element you don't need
-console.log(el.innerHTML);
-// "World"
-
-// Full serialization, eg. when you want the whole document
-console.log(new XMLSerializer().serializeToString(el));
-// "<div xmlns="http://www.w3.org/1999/xhtml">World</div>"
-```
-
-Due to the nature of various browser implementations, you may notice
-cross-browser differences in the serialized output, especially with respect to
-whitespace or self-closing tags.
-Buddy, that’s the web!
+Now running `open example.html` shows the equivalent HTML on the page.
 
 ## API
 
-This package exports the following identifiers: `toDom`.
+This package exports the identifier `toDom`.
 There is no default export.
 
 ### `toDom(node[, options])`
 
-Transform a [**hast**][hast] [*tree*][tree] to a DOM tree.
+Turn a hast tree into a DOM tree.
 
 ##### `options`
 
+Configuration (optional).
+
 ###### `options.fragment`
 
-Whether a DOM fragment should be returned (default: `false`).
+Return a DOM fragment (`boolean`, default: `false`).
+Creates whole documents otherwise.
 
 ###### `options.document`
 
-Document interface to use (default: `globalThis.document`).
+Document interface to use (`Document`, default: `globalThis.document`).
 
 ###### `options.namespace`
 
-`namespace` to use to create [*elements*][element].
+`namespace` to use to create elements (`string?`, optional).
 
 ###### `options.afterTransform`
 
-Function called after a hast node is transformed into a DOM node (`Function?`).
-Given the hast node that was handled as the first parameter and the
-corresponding DOM node as the second parameter.
+Called when a hast node was transformed into a DOM node
+(`(HastNode, Node) => void?`, optional).
+
+##### Returns
+
+[`Node`][dom].
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional type `Options`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
 Use of `hast-util-to-dom` can open you up to a
 [cross-site scripting (XSS)][xss] attack if the hast tree is unsafe.
-Use [`hast-util-santize`][sanitize] to make the hast tree safe.
+Use [`hast-util-santize`][hast-util-sanitize] to make the hast tree safe.
 
 ## Related
 
 *   [`hast-util-sanitize`](https://github.com/syntax-tree/hast-util-sanitize)
-    — Sanitize hast nodes
+    — sanitize hast nodes
 *   [`hast-util-to-html`](https://github.com/syntax-tree/hast-util-to-html)
-    — Create an HTML string
+    — serialize as HTML
 *   [`hast-util-from-dom`](https://github.com/syntax-tree/hast-util-from-dom)
-    — Create a hast tree from a DOM tree
+    — create a hast tree from a DOM tree
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
-By interacting with this repository, organization, or community you agree to
+By interacting with this repository, organisation, or community you agree to
 abide by its terms.
 
 ## License
@@ -153,22 +196,34 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://keith.mcknig.ht
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [hast]: https://github.com/syntax-tree/hast
 
-[element]: https://github.com/syntax-tree/hast#element
-
-[tree]: https://github.com/syntax-tree/unist#tree
+[dom]: https://developer.mozilla.org/docs/Web/API/Document_Object_Model
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
-[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+[hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+
+[hast-util-from-dom]: https://github.com/syntax-tree/hast-util-from-dom
+
+[jsdom]: https://github.com/jsdom/jsdom
+
+[rehype-dom-stringify]: https://github.com/rehypejs/rehype-dom/tree/main/packages/rehype-dom-stringify
