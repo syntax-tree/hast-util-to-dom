@@ -364,7 +364,7 @@ test('hast-util-to-dom', (t) => {
       /** @type {Array<[HastNode, string]>} */
       const calls = []
       toDom(h('html', [h('title', 'Hi')]), {
-        afterTransform: (node, transformed) => {
+        afterTransform(node, transformed) {
           calls.push([node, serializeNodeToHtmlString(transformed)])
         }
       })
