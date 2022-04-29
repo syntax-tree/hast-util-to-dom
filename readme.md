@@ -50,7 +50,7 @@ This package is [ESM only][esm].
 In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
 
 ```sh
-npm install hast-util-from-dom
+npm install hast-util-to-dom
 ```
 
 In Deno with [`esm.sh`][esmsh]:
