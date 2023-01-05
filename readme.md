@@ -17,7 +17,10 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`toDom(node[, options])`](#todomnode-options)
+    *   [`toDom(tree[, options])`](#todomtree-options)
+    *   [`AfterTransform`](#aftertransform)
+    *   [`Options`](#options)
+*   [Syntax tree](#syntax-tree)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -47,7 +50,7 @@ utility to serialize as HTML with DOM APIs.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ or 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-to-dom
@@ -88,42 +91,62 @@ Say our page `example.html` looks as follows:
   </script>
 ```
 
-Now running `open example.html` shows the equivalent HTML on the page.
+Now running `open example.html` shows the `main`, `h1`, and `p` elements on the
+page.
 
 ## API
 
-This package exports the identifier `toDom`.
+This package exports the identifier [`toDom`][to-dom].
 There is no default export.
 
-### `toDom(node[, options])`
+### `toDom(tree[, options])`
 
 Turn a hast tree into a DOM tree.
 
-##### `options`
+###### Parameters
 
-Configuration (optional).
+*   `tree` ([`HastNode`][hast-node])
+    — tree to transform
+*   `options` ([`Options`][options], optional)
+    — configuration
 
-###### `options.fragment`
+###### Returns
 
-Return a DOM fragment (`boolean`, default: `false`).
-Creates whole documents otherwise.
+DOM node ([`DomNode`][dom-node]).
 
-###### `options.document`
+### `AfterTransform`
 
-Document interface to use (`Document`, default: `globalThis.document`).
+Callback called when each node is transformed (TypeScript type).
 
-###### `options.namespace`
+###### Parameters
 
-`namespace` to use to create elements (`string?`, optional).
+*   `hastNode` ([`HastNode`][hast-node])
+    — hast node that was handled
+*   `domNode` ([`DomNode`][dom-node])
+    — corresponding DOM node
 
-###### `options.afterTransform`
+###### Returns
 
-Called when a hast node was transformed into a DOM node
-(`(HastNode, Node) => void?`, optional).
+Nothing.
 
-##### Returns
+### `Options`
 
-[`Node`][dom].
+Configuration (TypeScript type).
+
+###### Fields
+
+*   `afterTransform` ([`AfterTransform`][aftertransform], optional)
+    — callback called when each node is transformed
+*   `document` (`Document`, default: `globalThis.document`)
+    — document interface to use.
+*   `fragment` (`boolean`, default: `false`)
+    — whether to return a DOM fragment (`true`) or a whole document (`false`)
+*   `namespace` (`string`, default: depends)
+    — namespace to use to create elements
+
+## Syntax tree
+
+The syntax tree is [hast][].
 
 ## Types
 
@@ -134,7 +157,7 @@ It exports the additional types `AfterTransform` and `Options`.
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
@@ -159,7 +182,7 @@ ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
-By interacting with this repository, organisation, or community you agree to
+By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
@@ -214,10 +237,6 @@ abide by its terms.
 
 [coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
-[hast]: https://github.com/syntax-tree/hast
-
-[dom]: https://developer.mozilla.org/docs/Web/API/Document_Object_Model
-
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
 [hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
@@ -227,3 +246,17 @@ abide by its terms.
 [jsdom]: https://github.com/jsdom/jsdom
 
 [rehype-dom-stringify]: https://github.com/rehypejs/rehype-dom/tree/main/packages/rehype-dom-stringify
+
+[hast]: https://github.com/syntax-tree/hast
+
+[hast-node]: https://github.com/syntax-tree/hast#nodes
+
+[dom]: https://developer.mozilla.org/docs/Web/API/Document_Object_Model
+
+[dom-node]: https://developer.mozilla.org/docs/Web/API/Node
+
+[to-dom]: #todomtree-options
+
+[aftertransform]: #aftertransform
+
+[options]: #options
