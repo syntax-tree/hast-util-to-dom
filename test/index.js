@@ -373,7 +373,7 @@ test('hast-util-to-dom', (t) => {
       [h('title', 'Hi'), '<title>Hi</title>'],
       [h('html', [h('title', 'Hi')]), '<html><title>Hi</title></html>']
     ],
-    'should invoke afterTransform'
+    'should call `afterTransform`'
   )
 
   t.end()
