@@ -11,12 +11,17 @@ import {webNamespaces} from 'web-namespaces'
 import {h, s} from 'hastscript'
 import serialize from 'w3c-xmlserializer'
 import {toDom} from '../index.js'
+import * as mod from '../index.js'
 
 const document = new JSDOM().window.document
 
 globalThis.document = document
 
-test('hast-util-to-dom', () => {
+test('toDom', () => {
+  const api = Object.keys(mod)
+  assert.ok(api.includes('toDom'), 'should expose `toDom`')
+  assert.equal(api.length, 1, 'should expose the public api')
+
   assert.equal(
     // @ts-expect-error runtime.
     serializeNodeToHtmlString(toDom({type: 'root'})),
