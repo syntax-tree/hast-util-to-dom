@@ -128,7 +128,7 @@ Called when a hast node was transformed into a DOM node
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional type `Options`.
+It exports the additional types `AfterTransform` and `Options`.
 
 ## Compatibility
 
