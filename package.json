@@ -38,12 +38,10 @@
     "web-namespaces": "^2.0.0"
   },
   "devDependencies": {
-    "@types/glob": "^8.0.0",
     "@types/jsdom": "^20.0.0",
     "@types/tape": "^4.0.0",
     "@types/w3c-xmlserializer": "^2.0.0",
     "c8": "^7.0.0",
-    "glob": "^8.0.0",
     "hastscript": "^7.0.0",
     "jsdom": "^20.0.0",
     "prettier": "^2.0.0",
@@ -72,7 +70,17 @@
     "trailingComma": "none"
   },
   "xo": {
-    "prettier": true
+    "prettier": true,
+    "overrides": [
+      {
+        "files": [
+          "test/**/*.js"
+        ],
+        "rules": {
+          "no-await-in-loop": 0
+        }
+      }
+    ]
   },
   "remarkConfig": {
     "plugins": [

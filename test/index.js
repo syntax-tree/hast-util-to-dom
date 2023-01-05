@@ -2,18 +2,16 @@
  * @typedef {import('../lib/index.js').HastNode} HastNode
  */
 
-import fs from 'node:fs'
-import path from 'node:path'
+import fs from 'node:fs/promises'
+import process from 'node:process'
 import test from 'tape'
-import glob from 'glob'
 import {JSDOM} from 'jsdom'
 import {webNamespaces} from 'web-namespaces'
 import {h, s} from 'hastscript'
 import serialize from 'w3c-xmlserializer'
 import {toDom} from '../index.js'
 
-const window = new JSDOM().window
-const document = window.document
+const document = new JSDOM().window.document
 
 globalThis.document = document
 
@@ -381,39 +379,39 @@ test('hast-util-to-dom', (t) => {
   t.end()
 })
 
-test('fixtures', (t) => {
-  const root = path.join('test', 'fixtures')
-  const fixturePaths = glob.sync(path.join(root, '**/*/'))
-  let index = -1
+test('fixtures', async (t) => {
+  const base = new URL('fixtures/', import.meta.url)
+  const folders = await fs.readdir(base)
 
-  while (++index < fixturePaths.length) {
-    each(fixturePaths[index])
+  for (const folder of folders) {
+    if (folder.charAt(0) === '.') {
+      continue
+    }
+
+    const treeUrl = new URL(folder + '/index.json', base)
+    const fixtureUrl = new URL(folder + '/index.html', base)
+    /** @type {HastNode} */
+    const tree = JSON.parse(String(await fs.readFile(treeUrl)))
+    const dom = toDom(tree)
+    const actual = serializeNodeToHtmlString(dom)
+    /** @type {string} */
+    let expected
+
+    try {
+      if ('UPDATE' in process.env) {
+        throw new Error('Updating')
+      }
+
+      expected = String(await fs.readFile(fixtureUrl)).trim()
+    } catch {
+      await fs.writeFile(fixtureUrl, actual + '\n')
+      continue
+    }
+
+    t.equal(actual, expected, folder)
   }
 
   t.end()
-
-  /**
-   * @param {string} fixturePath
-   */
-  function each(fixturePath) {
-    const fixture = path.relative(root, fixturePath)
-    const fixtureInput = path.join(fixturePath, 'index.json')
-    const fixtureOutput = path.join(fixturePath, 'index.html')
-    /** @type {HastNode} */
-    const fixtureData = JSON.parse(String(fs.readFileSync(fixtureInput)))
-    const parsedActual = serializeNodeToHtmlString(toDom(fixtureData))
-    /** @type {string} */
-    let parsedExpected
-
-    try {
-      parsedExpected = fs.readFileSync(fixtureOutput).toString().trim()
-    } catch {
-      fs.writeFileSync(fixtureOutput, parsedActual)
-      return
-    }
-
-    t.equal(parsedActual, parsedExpected, fixture)
-  }
 })
 
 /**
