@@ -2,9 +2,10 @@
  * @typedef {import('../lib/index.js').HastNode} HastNode
  */
 
+import assert from 'node:assert'
 import fs from 'node:fs/promises'
 import process from 'node:process'
-import test from 'tape'
+import test from 'node:test'
 import {JSDOM} from 'jsdom'
 import {webNamespaces} from 'web-namespaces'
 import {h, s} from 'hastscript'
@@ -15,15 +16,15 @@ const document = new JSDOM().window.document
 
 globalThis.document = document
 
-test('hast-util-to-dom', (t) => {
-  t.equal(
+test('hast-util-to-dom', () => {
+  assert.equal(
     // @ts-expect-error runtime.
     serializeNodeToHtmlString(toDom({type: 'root'})),
     '',
     'creates an empty root node'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom({
         type: 'root',
@@ -36,7 +37,7 @@ test('hast-util-to-dom', (t) => {
     'creates a root node with a document element'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom({
         type: 'root',
@@ -58,26 +59,26 @@ test('hast-util-to-dom', (t) => {
     'creates a root node with a doctype'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom({type: 'text', value: 'hello world'})),
     'hello world',
     'creates a text node'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div'))),
     '<div></div>',
     'creates an element node'
   )
 
-  t.equal(
+  assert.equal(
     // @ts-expect-error runtime.
     serializeNodeToHtmlString(toDom({type: 'something-else'})),
     '<div></div>',
     'creates an unknown node in HTML'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       // @ts-expect-error runtime.
       toDom({type: 'something-else'}, {namespace: webNamespaces.svg})
@@ -86,7 +87,7 @@ test('hast-util-to-dom', (t) => {
     'creates an unknown node in SVG'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom({
         // @ts-expect-error runtime.
@@ -98,19 +99,19 @@ test('hast-util-to-dom', (t) => {
     'creates an unknown node (with children)'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('span', ['hello', 'world']))),
     '<span>helloworld</span>',
     'creates text nodes inside an element node'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('#foo.bar', 'text'))),
     '<div id="foo" class="bar">text</div>',
     'creates an html element'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(s('#foo.bar', s('circle')), {namespace: webNamespaces.svg})
     ),
@@ -118,7 +119,7 @@ test('hast-util-to-dom', (t) => {
     'creates SVG elements'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(h('input', {disabled: true, value: 'foo'}))
     ),
@@ -126,7 +127,7 @@ test('hast-util-to-dom', (t) => {
     'creates an input node with some attributes'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(h('input', {type: 'checkbox', checked: true}))
     ),
@@ -134,7 +135,7 @@ test('hast-util-to-dom', (t) => {
     'creates an checkbox where `checked` must be set as a property'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom({
         type: 'element',
@@ -147,13 +148,13 @@ test('hast-util-to-dom', (t) => {
     'handles falsey booleans correctly'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {class: ['foo', 'bar']}))),
     '<div class="foo bar"></div>',
     'handles space-separated attributes correctly'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(h('input', {type: 'file', accept: ['image/*', '.doc']}))
     ),
@@ -161,20 +162,20 @@ test('hast-util-to-dom', (t) => {
     'handles comma-separated attributes correctly'
   )
 
-  t.equal(
+  assert.equal(
     // @ts-expect-error hast types out of date.
     serializeNodeToHtmlString(toDom({type: 'doctype'})),
     '<!DOCTYPE html>',
     'creates a doctype node'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom({type: 'comment', value: 'after'})),
     '<!--after-->',
     'creates a comment'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(
         h('.alpha', [
@@ -189,7 +190,7 @@ test('hast-util-to-dom', (t) => {
     'creates nested nodes with attributes'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom({
         type: 'root',
@@ -213,7 +214,7 @@ test('hast-util-to-dom', (t) => {
     'wraps a fragment in an HTML element'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(
         {
@@ -240,7 +241,7 @@ test('hast-util-to-dom', (t) => {
     'does not wrap a fragment when the option is specified'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(
         {type: 'root', children: [h('html')]},
@@ -282,7 +283,7 @@ test('hast-util-to-dom', (t) => {
     }
   }
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(
       toDom(
         {
@@ -297,67 +298,67 @@ test('hast-util-to-dom', (t) => {
     'should support a given document'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {ariaChecked: true}))),
     '<div aria-checked="true"></div>',
     'handles booleanish attribute with `true` value correctly'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {ariaChecked: false}))),
     '<div aria-checked="false"></div>',
     'handles booleanish attribute with `false` value correctly'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {ariaChecked: 'mixed'}))),
     '<div aria-checked="mixed"></div>',
     'handles booleanish attribute with value correctly'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: false}))),
     '<div></div>',
     'ignores data properties when value is `false`'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: Number.NaN}))),
     '<div></div>',
     'ignores data properties when value is `NaN`'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: 0}))),
     '<div data-test="0"></div>',
     'encodes data properties when a number'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: true}))),
     '<div data-test=""></div>',
     'encodes data properties w/o value `true`'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: ''}))),
     '<div data-test=""></div>',
     'encodes data properties when an empty string'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {dataTest: 'data-test'}))),
     '<div data-test="data-test"></div>',
     'encodes data properties when string'
   )
 
-  t.equal(
+  assert.equal(
     serializeNodeToHtmlString(toDom(h('div', {data123: 'dataTest'}))),
     '<div data-123="dataTest"></div>',
     'encodes data properties when string'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     (() => {
       /** @type {Array<[HastNode, string]>} */
       const calls = []
@@ -375,11 +376,9 @@ test('hast-util-to-dom', (t) => {
     ],
     'should call `afterTransform`'
   )
-
-  t.end()
 })
 
-test('fixtures', async (t) => {
+test('fixtures', async () => {
   const base = new URL('fixtures/', import.meta.url)
   const folders = await fs.readdir(base)
 
@@ -408,14 +407,17 @@ test('fixtures', async (t) => {
       continue
     }
 
-    t.equal(actual, expected, folder)
+    assert.equal(actual, expected, folder)
   }
-
-  t.end()
 })
 
 /**
+ * Serialize a DOM node as HTML.
+ *
  * @param {Node} node
+ *   DOM node.
+ * @returns {string}
+ *   Serialized HTML.
  */
 function serializeNodeToHtmlString(node) {
   const serialized = serialize(node)
