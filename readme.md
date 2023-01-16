@@ -50,7 +50,7 @@ utility to serialize as HTML with DOM APIs.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-to-dom
@@ -151,7 +151,8 @@ The syntax tree is [hast][].
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `AfterTransform` and `Options`.
+It exports the additional types [`AfterTransform`][aftertransform] and
+[`Options`][options].
 
 ## Compatibility
 
