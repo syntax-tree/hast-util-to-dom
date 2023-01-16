@@ -18,9 +18,11 @@ const document = new JSDOM().window.document
 globalThis.document = document
 
 test('toDom', () => {
-  const api = Object.keys(mod)
-  assert.ok(api.includes('toDom'), 'should expose `toDom`')
-  assert.equal(api.length, 1, 'should expose the public api')
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['toDom'],
+    'should expose the public api'
+  )
 
   assert.equal(
     // @ts-expect-error runtime.
