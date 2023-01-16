@@ -2,7 +2,7 @@
  * @typedef {import('../lib/index.js').HastNode} HastNode
  */
 
-import assert from 'node:assert'
+import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import test from 'node:test'
