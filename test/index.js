@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../lib/index.js').HastNode} HastNode
+ * @typedef {import('hast').Nodes} Nodes
  */
 
 import assert from 'node:assert/strict'
@@ -49,7 +49,7 @@ test('toDom', () => {
       toDom({
         type: 'root',
         children: [
-          {type: 'doctype', name: 'html'},
+          {type: 'doctype'},
           {
             type: 'element',
             tagName: 'html',
@@ -170,7 +170,6 @@ test('toDom', () => {
   )
 
   assert.equal(
-    // @ts-expect-error hast types out of date.
     serializeNodeToHtmlString(toDom({type: 'doctype'})),
     '<!DOCTYPE html>',
     'creates a doctype node'
@@ -367,7 +366,7 @@ test('toDom', () => {
 
   assert.deepEqual(
     (() => {
-      /** @type {Array<[HastNode, string]>} */
+      /** @type {Array<[Nodes, string]>} */
       const calls = []
       toDom(h('html', [h('title', 'Hi')]), {
         afterTransform(node, transformed) {
@@ -396,7 +395,7 @@ test('fixtures', async () => {
 
     const treeUrl = new URL(folder + '/index.json', base)
     const fixtureUrl = new URL(folder + '/index.html', base)
-    /** @type {HastNode} */
+    /** @type {Nodes} */
     const tree = JSON.parse(String(await fs.readFile(treeUrl)))
     const dom = toDom(tree)
     const actual = serializeNodeToHtmlString(dom)
