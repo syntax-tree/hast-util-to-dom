@@ -8,9 +8,9 @@ import process from 'node:process'
 import test from 'node:test'
 import {JSDOM} from 'jsdom'
 import {h, s} from 'hastscript'
+import {toDom} from 'hast-util-to-dom'
 import serialize from 'w3c-xmlserializer'
 import {webNamespaces} from 'web-namespaces'
-import {toDom} from '../index.js'
 
 const document = new JSDOM().window.document
 
@@ -18,7 +18,9 @@ globalThis.document = document
 
 test('toDom', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('../index.js')).sort(), ['toDom'])
+    assert.deepEqual(Object.keys(await import('hast-util-to-dom')).sort(), [
+      'toDom'
+    ])
   })
 
   await t.test('should create an empty root node', async function () {
