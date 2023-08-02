@@ -59,14 +59,14 @@ npm install hast-util-to-dom
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {toDom} from 'https://esm.sh/hast-util-to-dom@3'
+import {toDom} from 'https://esm.sh/hast-util-to-dom@4'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {toDom} from 'https://esm.sh/hast-util-to-dom@3?bundle'
+  import {toDom} from 'https://esm.sh/hast-util-to-dom@4?bundle'
 </script>
 ```
 
