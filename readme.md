@@ -50,7 +50,7 @@ utility to serialize as HTML with DOM APIs.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install hast-util-to-dom
@@ -96,7 +96,7 @@ page.
 
 ## API
 
-This package exports the identifier [`toDom`][to-dom].
+This package exports the identifier [`toDom`][api-to-dom].
 There is no default export.
 
 ### `toDom(tree[, options])`
@@ -107,7 +107,7 @@ Turn a hast tree into a DOM tree.
 
 *   `tree` ([`HastNode`][hast-node])
     — tree to transform
-*   `options` ([`Options`][options], optional)
+*   `options` ([`Options`][api-options], optional)
     — configuration
 
 ###### Returns
@@ -135,7 +135,7 @@ Configuration (TypeScript type).
 
 ###### Fields
 
-*   `afterTransform` ([`AfterTransform`][aftertransform], optional)
+*   `afterTransform` ([`AfterTransform`][api-after-transform], optional)
     — callback called when each node is transformed
 *   `document` (`Document`, default: `globalThis.document`)
     — document interface to use.
@@ -151,15 +151,18 @@ The syntax tree is [hast][].
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types [`AfterTransform`][aftertransform] and
-[`Options`][options].
+It exports the additional types [`AfterTransform`][api-after-transform] and
+[`Options`][api-options].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `hast-util-to-dom@^3`,
+compatible with Node.js 12.
 
 ## Security
 
@@ -204,9 +207,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-to-dom
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-to-dom.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-to-dom
 
-[size]: https://bundlephobia.com/result?p=hast-util-to-dom
+[size]: https://bundlejs.com/?q=hast-util-to-dom
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -256,8 +259,8 @@ abide by its terms.
 
 [dom-node]: https://developer.mozilla.org/docs/Web/API/Node
 
-[to-dom]: #todomtree-options
+[api-to-dom]: #todomtree-options
 
-[aftertransform]: #aftertransform
+[api-after-transform]: #aftertransform
 
-[options]: #options
+[api-options]: #options
