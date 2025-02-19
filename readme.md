@@ -35,8 +35,9 @@ from a [hast][github-hast] (HTML) syntax tree.
 ## When should I use this?
 
 You can use this project when you want to turn hast into a DOM in browsers,
-either to use it directly on a page, or to enable the use of DOM APIs (such as
-`querySelector` to find things or `innerHTML` to serialize stuff).
+either to use it directly on a page,
+or to enable the use of DOM APIs
+(such as `querySelector` to find things or `innerHTML` to serialize stuff).
 
 The hast utility [`hast-util-from-dom`][github-hast-util-from-dom] does the
 inverse of this utility.
@@ -48,7 +49,8 @@ this utility to serialize as HTML with DOM APIs.
 ## Install
 
 This package is [ESM only][github-gist-esm].
-In Node.js (version 16+), install with [npm][npmjs-install]:
+In Node.js (version 16+),
+install with [npm][npmjs-install]:
 
 ```sh
 npm install hast-util-to-dom
@@ -89,8 +91,10 @@ Say our page `example.html` looks as follows:
   </script>
 ```
 
-Now running `open example.html` shows the `main`, `h1`, and `p` elements on the
-page.
+Now running `open example.html` shows the
+`main`,
+`h1`,
+and `p` elements on the page.
 
 ## API
 
@@ -103,9 +107,11 @@ Turn a hast tree into a DOM tree.
 
 ###### Parameters
 
-* `tree` ([`HastNode`][github-hast-nodes])
+* `tree`
+  ([`HastNode`][github-hast-nodes])
   — tree to transform
-* `options` ([`Options`][api-options], optional)
+* `options`
+  ([`Options`][api-options], optional)
   — configuration
 
 ###### Returns
@@ -133,13 +139,17 @@ Configuration (TypeScript type).
 
 ###### Fields
 
-* `afterTransform` ([`AfterTransform`][api-after-transform], optional)
+* `afterTransform`
+  ([`AfterTransform`][api-after-transform], optional)
   — callback called when each node is transformed
-* `document` (`Document`, default: `globalThis.document`)
+* `document`
+  (`Document`, default: `globalThis.document`)
   — document interface to use.
-* `fragment` (`boolean`, default: `false`)
+* `fragment`
+  (`boolean`, default: `false`)
   — whether to return a DOM fragment (`true`) or a whole document (`false`)
-* `namespace` (`string`, default: depends)
+* `namespace`
+  (`string`, default: depends)
   — namespace to use to create elements
 
 ## Syntax tree
@@ -157,9 +167,10 @@ It exports the additional types [`AfterTransform`][api-after-transform] and
 Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
 
-When we cut a new major release, we drop support for unmaintained versions of
-Node.
-This means we try to keep the current release line, `hast-util-to-dom@^4`,
+When we cut a new major release,
+we drop support for unmaintained versions of Node.
+This means we try to keep the current release line,
+`hast-util-to-dom@4`,
 compatible with Node.js 16.
 
 ## Security
