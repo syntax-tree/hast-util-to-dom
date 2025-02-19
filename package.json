@@ -7,7 +7,7 @@
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
-    "property-information": "^6.0.0",
+    "property-information": "^7.0.0",
     "web-namespaces": "^2.0.0"
   },
   "description": "hast utility to transform to the DOM",
