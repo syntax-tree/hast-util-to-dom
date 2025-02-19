@@ -322,7 +322,7 @@ test('toDom', async function (t) {
   })
 
   await t.test('should support a given document', async function () {
-    const doc = {
+    const partialDocument = {
       /**
        * @param {string} namespace
        * @param {string} tagName
@@ -364,7 +364,7 @@ test('toDom', async function (t) {
             children: [h('html', [h('title', 'foo'), h('h1', 'bar')])]
           },
           // @ts-expect-error: not an entire document, but the least we need!
-          {document: doc}
+          {document: partialDocument}
         )
       ),
       '<html><title>FOO</title><h2>BAR</h2></html>'
