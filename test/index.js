@@ -536,4 +536,9 @@ function serializeNodeToHtmlString(node) {
   return serialized
     .replace(new RegExp(` xmlns="${webNamespaces.html}"`, 'g'), '')
     .replace(new RegExp(`(<(?:g|svg)) xmlns="${webNamespaces.svg}"`, 'g'), '$1')
+    .replace(
+      new RegExp(`(<(?:math|mrow)) xmlns="${webNamespaces.mathml}"`, 'g'),
+      '$1'
+    )
+    .replace(/<(mglyph|malignmark|mspace)\/>/g, '<$1></$1>')
 }
