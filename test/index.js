@@ -164,6 +164,237 @@ test('toDom', async function (t) {
   })
 
   await t.test(
+    'should create SVG `foreignObject` children with HTML namespace',
+    async function () {
+      const {calls, document: instrumentedDocument} =
+        createInstrumentedDocument()
+
+      assert.equal(
+        serializeNodeToHtmlString(
+          toDom(
+            {
+              type: 'element',
+              tagName: 'svg',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'foreignObject',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'div',
+                      properties: {},
+                      children: [
+                        {
+                          type: 'element',
+                          tagName: 'svg',
+                          properties: {},
+                          children: [
+                            {
+                              type: 'element',
+                              tagName: 'circle',
+                              properties: {},
+                              children: []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {document: instrumentedDocument}
+          )
+        ),
+        '<svg><foreignObject><div><svg><circle/></svg></div></foreignObject></svg>'
+      )
+
+      assert.deepEqual(calls, [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'foreignObject'],
+        [webNamespaces.html, 'div'],
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'circle']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create SVG `title` children with HTML namespace',
+    async function () {
+      const {calls, document: instrumentedDocument} =
+        createInstrumentedDocument()
+
+      assert.equal(
+        serializeNodeToHtmlString(
+          toDom(
+            {
+              type: 'element',
+              tagName: 'svg',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'title',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'span',
+                      properties: {},
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {document: instrumentedDocument}
+          )
+        ),
+        '<svg><title><span></span></title></svg>'
+      )
+
+      assert.deepEqual(calls, [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'title'],
+        [webNamespaces.html, 'span']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create SVG `desc` children with HTML namespace',
+    async function () {
+      const {calls, document: instrumentedDocument} =
+        createInstrumentedDocument()
+
+      assert.equal(
+        serializeNodeToHtmlString(
+          toDom(
+            {
+              type: 'element',
+              tagName: 'svg',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'desc',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'span',
+                      properties: {},
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {document: instrumentedDocument}
+          )
+        ),
+        '<svg><desc><span></span></desc></svg>'
+      )
+
+      assert.deepEqual(calls, [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'desc'],
+        [webNamespaces.html, 'span']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create MathML `annotation-xml` children with HTML namespace',
+    async function () {
+      const {calls, document: instrumentedDocument} =
+        createInstrumentedDocument()
+
+      assert.equal(
+        serializeNodeToHtmlString(
+          toDom(
+            {
+              type: 'element',
+              tagName: 'math',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'annotation-xml',
+                  properties: {encoding: 'text/html'},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'p',
+                      properties: {},
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {document: instrumentedDocument}
+          )
+        ),
+        '<math><annotation-xml encoding="text/html"><p></p></annotation-xml></math>'
+      )
+
+      assert.deepEqual(calls, [
+        [webNamespaces.mathml, 'math'],
+        [webNamespaces.mathml, 'annotation-xml'],
+        [webNamespaces.html, 'p']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create MathML `annotation-xml` children with HTML namespace for `application/xhtml+xml`',
+    async function () {
+      const {calls, document: instrumentedDocument} =
+        createInstrumentedDocument()
+
+      assert.equal(
+        serializeNodeToHtmlString(
+          toDom(
+            {
+              type: 'element',
+              tagName: 'math',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'annotation-xml',
+                  properties: {encoding: 'Application/XHTML+XML'},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'p',
+                      properties: {},
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {document: instrumentedDocument}
+          )
+        ),
+        '<math><annotation-xml encoding="Application/XHTML+XML"><p></p></annotation-xml></math>'
+      )
+
+      assert.deepEqual(calls, [
+        [webNamespaces.mathml, 'math'],
+        [webNamespaces.mathml, 'annotation-xml'],
+        [webNamespaces.html, 'p']
+      ])
+    }
+  )
+
+  await t.test(
     'should create an input node with some attributes',
     async function () {
       assert.equal(
@@ -541,4 +772,38 @@ function serializeNodeToHtmlString(node) {
       '$1'
     )
     .replace(/<(mglyph|malignmark|mspace)\/>/g, '<$1></$1>')
+}
+
+/**
+ * Create an instrumented document that records `createElementNS` calls.
+ *
+ * @returns {{calls: Array<[string, string]>, document: Document}}
+ *   Call records and instrumented document.
+ */
+function createInstrumentedDocument() {
+  /** @type {Array<[string, string]>} */
+  const calls = []
+  const instrumentedDocument = new Proxy(document, {
+    get(target, key) {
+      if (key === 'createElementNS') {
+        /**
+         * @param {string | null} namespaceURI
+         * @param {string} qualifiedName
+         * @param {string | ElementCreationOptions | undefined} options
+         * @returns {Element}
+         */
+        return function (namespaceURI, qualifiedName, options) {
+          calls.push([String(namespaceURI), qualifiedName])
+          return target.createElementNS(namespaceURI, qualifiedName, options)
+        }
+      }
+
+      /** @type {unknown} */
+      const value = Reflect.get(target, key)
+
+      return typeof value === 'function' ? value.bind(target) : value
+    }
+  })
+
+  return {calls, document: instrumentedDocument}
 }
