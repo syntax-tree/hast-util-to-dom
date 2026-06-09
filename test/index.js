@@ -12,7 +12,7 @@ import {toDom} from 'hast-util-to-dom'
 import serialize from 'w3c-xmlserializer'
 import {webNamespaces} from 'web-namespaces'
 
-const document = new JSDOM().window.document
+const {document} = new JSDOM().window
 
 globalThis.document = document
 

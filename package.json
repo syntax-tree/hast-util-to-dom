@@ -12,19 +12,20 @@
   },
   "description": "hast utility to transform to the DOM",
   "devDependencies": {
-    "@types/jsdom": "^21.0.0",
-    "@types/node": "^22.0.0",
+    "@types/jsdom": "^28.0.0",
+    "@types/node": "^25.0.0",
     "@types/w3c-xmlserializer": "^2.0.0",
-    "c8": "^10.0.0",
+    "c8": "^11.0.0",
+    "globals": "^17.0.0",
     "hastscript": "^9.0.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^29.0.0",
     "prettier": "^3.0.0",
     "remark-cli": "^12.0.0",
     "remark-preset-wooorm": "^11.0.0",
     "type-coverage": "^2.0.0",
-    "typescript": "^5.0.0",
+    "typescript": "^6.0.0",
     "w3c-xmlserializer": "^5.0.0",
-    "xo": "^0.60.0"
+    "xo": "^2.0.0"
   },
   "exports": "./index.js",
   "files": [
@@ -49,6 +50,11 @@
   ],
   "license": "ISC",
   "name": "hast-util-to-dom",
+  "overrides": {
+    "c8": {
+      "yargs": "^18.0.0"
+    }
+  },
   "prettier": {
     "bracketSpacing": false,
     "semi": false,
@@ -76,21 +82,5 @@
     "strict": true
   },
   "type": "module",
-  "version": "4.0.1",
-  "xo": {
-    "overrides": [
-      {
-        "files": [
-          "test/**/*.js"
-        ],
-        "rules": {
-          "no-await-in-loop": "off"
-        }
-      }
-    ],
-    "prettier": true,
-    "rules": {
-      "unicorn/prefer-string-replace-all": "off"
-    }
-  }
+  "version": "4.0.1"
 }
