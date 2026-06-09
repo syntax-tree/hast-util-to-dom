@@ -177,6 +177,54 @@ test('toDom', async function (t) {
   })
 
   await t.test(
+    'should create HTML elements with `createElement()` when namespace is omitted',
+    async function () {
+      const tree = toDom(
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'dIv',
+              properties: {},
+              children: [{type: 'text', value: 'Hi'}]
+            }
+          ]
+        },
+        {fragment: true}
+      )
+
+      // Infer the use of `createElement()` from the lowercased tag name.
+      assert.equal(serializeNodeToHtmlString(tree), '<div>Hi</div>')
+    }
+  )
+
+  await t.test(
+    'should create HTML elements with `createElementNS()` when namespace is provided',
+    async function () {
+      const tree = toDom(
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'dIv',
+              properties: {
+                xmlns: webNamespaces.html
+              },
+              children: [{type: 'text', value: 'Hi'}]
+            }
+          ]
+        },
+        {fragment: true}
+      )
+
+      // Infer the use of `createElementNS()` from the non-lowercased tag name
+      assert.equal(serializeNodeToHtmlString(tree), '<dIv>Hi</dIv>')
+    }
+  )
+
+  await t.test(
     'should create SVG `foreignObject` children with HTML namespace',
     async function () {
       const tree = toDom(
