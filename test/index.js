@@ -166,40 +166,9 @@ test('toDom', async function (t) {
   await t.test(
     'should create SVG `foreignObject` children with HTML namespace',
     async function () {
-      const tree = toDom({
-        type: 'element',
-        tagName: 'svg',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'foreignObject',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'div',
-                properties: {},
-                children: [
-                  {
-                    type: 'element',
-                    tagName: 'svg',
-                    properties: {},
-                    children: [
-                      {
-                        type: 'element',
-                        tagName: 'circle',
-                        properties: {},
-                        children: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      })
+      const tree = toDom(
+        s('svg', s('foreignObject', h('div', s('svg', s('circle')))))
+      )
 
       assert.equal(
         serializeNodeToHtmlString(tree),
@@ -219,26 +188,7 @@ test('toDom', async function (t) {
   await t.test(
     'should create SVG `title` children with HTML namespace',
     async function () {
-      const tree = toDom({
-        type: 'element',
-        tagName: 'svg',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'title',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'span',
-                properties: {},
-                children: []
-              }
-            ]
-          }
-        ]
-      })
+      const tree = toDom(s('svg', s('title', h('span'))))
 
       assert.equal(
         serializeNodeToHtmlString(tree),
@@ -256,26 +206,7 @@ test('toDom', async function (t) {
   await t.test(
     'should create SVG `desc` children with HTML namespace',
     async function () {
-      const tree = toDom({
-        type: 'element',
-        tagName: 'svg',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'desc',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'span',
-                properties: {},
-                children: []
-              }
-            ]
-          }
-        ]
-      })
+      const tree = toDom(s('svg', s('desc', h('span'))))
 
       assert.equal(
         serializeNodeToHtmlString(tree),
@@ -293,26 +224,9 @@ test('toDom', async function (t) {
   await t.test(
     'should create MathML `annotation-xml` children with HTML namespace',
     async function () {
-      const tree = toDom({
-        type: 'element',
-        tagName: 'math',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'annotation-xml',
-            properties: {encoding: 'text/html'},
-            children: [
-              {
-                type: 'element',
-                tagName: 'paragraph',
-                properties: {},
-                children: []
-              }
-            ]
-          }
-        ]
-      })
+      const tree = toDom(
+        h('math', h('annotation-xml', {encoding: 'text/html'}, h('paragraph')))
+      )
 
       assert.equal(
         serializeNodeToHtmlString(tree),
@@ -330,26 +244,16 @@ test('toDom', async function (t) {
   await t.test(
     'should create MathML `annotation-xml` children with HTML namespace for `application/xhtml+xml`',
     async function () {
-      const tree = toDom({
-        type: 'element',
-        tagName: 'math',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'annotation-xml',
-            properties: {encoding: 'Application/XHTML+XML'},
-            children: [
-              {
-                type: 'element',
-                tagName: 'paragraph',
-                properties: {},
-                children: []
-              }
-            ]
-          }
-        ]
-      })
+      const tree = toDom(
+        h(
+          'math',
+          h(
+            'annotation-xml',
+            {encoding: 'Application/XHTML+XML'},
+            h('paragraph')
+          )
+        )
+      )
 
       assert.equal(
         serializeNodeToHtmlString(tree),
