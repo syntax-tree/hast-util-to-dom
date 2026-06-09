@@ -121,6 +121,19 @@ test('toDom', async function (t) {
     )
   })
 
+  await t.test('should create an unknown node in MathML', async function () {
+    assert.equal(
+      serializeNodeToHtmlString(
+        toDom(
+          // @ts-expect-error: check how an unknown node is handled.
+          {type: 'something-else'},
+          {namespace: webNamespaces.mathml}
+        )
+      ),
+      '<mrow/>'
+    )
+  })
+
   await t.test(
     'should create an unknown node (with children)',
     async function () {
@@ -162,6 +175,159 @@ test('toDom', async function (t) {
       '<g id="foo" class="bar"><circle/></g>'
     )
   })
+
+  await t.test(
+    'should create HTML elements with `createElement()` when namespace is omitted',
+    async function () {
+      const tree = toDom(
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'dIv',
+              properties: {},
+              children: [{type: 'text', value: 'Hi'}]
+            }
+          ]
+        },
+        {fragment: true}
+      )
+
+      // Infer the use of `createElement()` from the lowercased tag name.
+      assert.equal(serializeNodeToHtmlString(tree), '<div>Hi</div>')
+    }
+  )
+
+  await t.test(
+    'should create HTML elements with `createElementNS()` when namespace is provided',
+    async function () {
+      const tree = toDom(
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'dIv',
+              properties: {
+                xmlns: webNamespaces.html
+              },
+              children: [{type: 'text', value: 'Hi'}]
+            }
+          ]
+        },
+        {fragment: true}
+      )
+
+      // Infer the use of `createElementNS()` from the non-lowercased tag name
+      assert.equal(serializeNodeToHtmlString(tree), '<dIv>Hi</dIv>')
+    }
+  )
+
+  await t.test(
+    'should create SVG `foreignObject` children with HTML namespace',
+    async function () {
+      const tree = toDom(
+        s('svg', s('foreignObject', h('div', s('svg', s('circle')))))
+      )
+
+      assert.equal(
+        serializeNodeToHtmlString(tree),
+        '<svg><foreignObject><div><svg><circle/></svg></div></foreignObject></svg>'
+      )
+
+      assert.deepEqual(serializeNodeToNamespaceAndLocalName(tree), [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'foreignObject'],
+        [webNamespaces.html, 'div'],
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'circle']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create SVG `title` children with HTML namespace',
+    async function () {
+      const tree = toDom(s('svg', s('title', h('span'))))
+
+      assert.equal(
+        serializeNodeToHtmlString(tree),
+        '<svg><title><span></span></title></svg>'
+      )
+
+      assert.deepEqual(serializeNodeToNamespaceAndLocalName(tree), [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'title'],
+        [webNamespaces.html, 'span']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create SVG `desc` children with HTML namespace',
+    async function () {
+      const tree = toDom(s('svg', s('desc', h('span'))))
+
+      assert.equal(
+        serializeNodeToHtmlString(tree),
+        '<svg><desc><span></span></desc></svg>'
+      )
+
+      assert.deepEqual(serializeNodeToNamespaceAndLocalName(tree), [
+        [webNamespaces.svg, 'svg'],
+        [webNamespaces.svg, 'desc'],
+        [webNamespaces.html, 'span']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create MathML `annotation-xml` children with HTML namespace',
+    async function () {
+      const tree = toDom(
+        h('math', h('annotation-xml', {encoding: 'text/html'}, h('paragraph')))
+      )
+
+      assert.equal(
+        serializeNodeToHtmlString(tree),
+        '<math><annotation-xml encoding="text/html"><paragraph></paragraph></annotation-xml></math>'
+      )
+
+      assert.deepEqual(serializeNodeToNamespaceAndLocalName(tree), [
+        [webNamespaces.mathml, 'math'],
+        [webNamespaces.mathml, 'annotation-xml'],
+        [webNamespaces.html, 'paragraph']
+      ])
+    }
+  )
+
+  await t.test(
+    'should create MathML `annotation-xml` children with HTML namespace for `application/xhtml+xml`',
+    async function () {
+      const tree = toDom(
+        h(
+          'math',
+          h(
+            'annotation-xml',
+            {encoding: 'Application/XHTML+XML'},
+            h('paragraph')
+          )
+        )
+      )
+
+      assert.equal(
+        serializeNodeToHtmlString(tree),
+        '<math><annotation-xml encoding="Application/XHTML+XML"><paragraph></paragraph></annotation-xml></math>'
+      )
+
+      assert.deepEqual(serializeNodeToNamespaceAndLocalName(tree), [
+        [webNamespaces.mathml, 'math'],
+        [webNamespaces.mathml, 'annotation-xml'],
+        [webNamespaces.html, 'paragraph']
+      ])
+    }
+  )
 
   await t.test(
     'should create an input node with some attributes',
@@ -536,4 +702,26 @@ function serializeNodeToHtmlString(node) {
   return serialized
     .replace(new RegExp(` xmlns="${webNamespaces.html}"`, 'g'), '')
     .replace(new RegExp(`(<(?:g|svg)) xmlns="${webNamespaces.svg}"`, 'g'), '$1')
+    .replace(
+      new RegExp(`(<(?:math|mrow)) xmlns="${webNamespaces.mathml}"`, 'g'),
+      '$1'
+    )
+    .replace(/<(mglyph|malignmark|mspace)\/>/g, '<$1></$1>')
+}
+
+/**
+ * Collect namespace and local name pairs for an element and descendants.
+ *
+ * @param {Node} node
+ *   DOM node.
+ * @returns {Array<[string, string]>}
+ *   Namespace and local name pairs in document order.
+ */
+function serializeNodeToNamespaceAndLocalName(node) {
+  assert.ok(document.defaultView)
+  assert.ok(node instanceof document.defaultView.Element)
+
+  return [node, ...node.querySelectorAll('*')].map(function (element) {
+    return [String(element.namespaceURI), element.localName]
+  })
 }
