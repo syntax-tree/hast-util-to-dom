@@ -121,6 +121,19 @@ test('toDom', async function (t) {
     )
   })
 
+  await t.test('should create an unknown node in MathML', async function () {
+    assert.equal(
+      serializeNodeToHtmlString(
+        toDom(
+          // @ts-expect-error: check how an unknown node is handled.
+          {type: 'something-else'},
+          {namespace: webNamespaces.mathml}
+        )
+      ),
+      '<mrow/>'
+    )
+  })
+
   await t.test(
     'should create an unknown node (with children)',
     async function () {
